@@ -26,7 +26,7 @@ Gsiso AI is a lightweight, user-friendly Linux distribution designed for efficie
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/gsiso-ai.git
+git clone https://github.com/sisodiabhumca/gsiso-ai.git
 cd gsiso-ai
 
 # Build the ISO
@@ -35,14 +35,14 @@ cd gsiso-ai
 
 ### Installation
 
-1. Download the latest ISO from our [releases page](https://github.com/yourusername/gsiso-ai/releases)
+1. Download the latest ISO from our [releases page](https://github.com/sisodiabhumca/gsiso-ai/releases)
 2. Create a bootable USB: `dd if=gsiso-ai.iso of=/dev/sdX bs=4M status=progress`
 3. Boot from the USB drive
 4. Follow the on-screen installation wizard
 
 ## Documentation
 
-For detailed documentation, please visit our [Wiki](https://github.com/yourusername/gsiso-ai/wiki).
+For detailed documentation, please visit our [Wiki](https://github.com/sisodiabhumca/gsiso-ai/wiki).
 
 ## Contributing
 
