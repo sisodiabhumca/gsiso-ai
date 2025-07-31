@@ -6,13 +6,91 @@
     <title>Gsiso AI - Lightweight Linux Distribution</title>
     <meta name="description" content="Gsiso AI is a lightweight, fast, and user-friendly Linux distribution designed for modern hardware while maintaining compatibility with older systems.">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Logo in navigation */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .logo-img {
+            height: 2.5rem;
+            width: auto;
+            max-width: 100%;
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+        .logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+        .logo span {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        /* Hero section logo */
+        .hero-logo {
+            margin: 0 auto 1.5rem;
+            text-align: center;
+        }
+        .logo-large {
+            height: 8rem;
+            width: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .logo-large:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .logo-large {
+                height: 6rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .logo {
+                gap: 8px;
+            }
+            .logo-img {
+                height: 2rem;
+            }
+            .logo span {
+                font-size: 1.25rem;
+            }
+            .logo-large {
+                height: 5rem;
+                border-radius: 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            .logo-img {
+                height: 1.75rem;
+            }
+            .logo span {
+                font-size: 1.1rem;
+            }
+            .logo-large {
+                height: 4rem;
+            }
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="https://github.com/sisodiabhumca.png">
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">Gsiso AI</div>
+            <div class="logo">
+                <img src="assets/img/logo.jpg" alt="Gsiso AI Logo" class="logo-img">
+                <span>Gsiso AI</span>
+            </div>
             <ul>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#download">Download</a></li>
@@ -22,6 +100,9 @@
             </ul>
         </nav>
         <div class="hero">
+            <div class="hero-logo">
+                <img src="assets/img/logo.jpg" alt="Gsiso AI Logo" class="logo-large">
+            </div>
             <h1>Gsiso AI Linux</h1>
             <p class="tagline">Lightweight. Fast. Simple.</p>
             <div class="cta-buttons">

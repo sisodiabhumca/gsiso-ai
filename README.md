@@ -1,6 +1,11 @@
-# Gsiso AI - Lightweight Linux Distribution
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+<div align="center">
+  <img src="assets/img/logo.jpg" alt="Gsiso AI Logo" width="200">
+  <h1>Gsiso AI - Lightweight Linux Distribution</h1>
+  
+  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+  [![GitHub Release](https://img.shields.io/github/v/release/sisodiabhumca/gsiso-ai)](https://github.com/sisodiabhumca/gsiso-ai/releases)
+  [![GitHub Issues](https://img.shields.io/github/issues/sisodiabhumca/gsiso-ai)](https://github.com/sisodiabhumca/gsiso-ai/issues)
+</div>
 
 Gsiso AI is a lightweight, user-friendly Linux distribution designed for efficiency and ease of use. Built with minimalism in mind, it's perfect for older hardware, embedded systems, or anyone who values speed and simplicity.
 
