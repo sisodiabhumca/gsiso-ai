@@ -1,0 +1,37 @@
+# Build artifacts
+/build/
+*.iso
+*.iso.sha256
+
+# Temporary files
+*.swp
+*~
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# Package manager cache
+/var/cache/gs-pkg/
+
+# Local configuration
+*.local
+.env
+
+# Logs
+*.log
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

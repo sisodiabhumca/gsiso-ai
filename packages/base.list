@@ -1,0 +1,60 @@
+# Core System
+linux
+busybox
+musl
+glibc
+zlib
+openssl
+ca-certificates
+
+# Init System
+runit
+
+# Package Management
+gs-pkg
+
+# Basic Utilities
+coreutils
+findutils
+grep
+sed
+gawk
+less
+tar
+gzip
+xz
+bzip2
+
+# System Tools
+procps
+util-linux
+eudev
+kmod
+hwdata
+pciutils
+usbutils
+
+# Networking
+dhcpcd
+iproute2
+iputils
+wireless-tools
+wpa_supplicant
+
+# Hardware Support
+firmware-linux
+firmware-linux-nonfree
+
+# Text Editors
+nano
+vim-tiny
+
+# Shells
+bash
+
+# Documentation
+man-pages
+man-pages-posix
+
+# Localization
+glibc-locales

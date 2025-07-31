@@ -1,0 +1,80 @@
+#!/bin/sh
+# Gsiso AI Linux Init Script
+# This script is responsible for system initialization
+
+# Set the PATH
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+
+echo ""
+echo "  ____ ____  _     ___  _____   ___    _    _   _"
+echo " / ___/ ___|| |   / _ \\| ____| |_ _|  / \\  | \ | |"
+echo "| |  _\\___ \\| |  | | | |  _|    | |  / _ \\ |  \\| |"
+echo "| |_| |___) | |__| |_| | |___   | | / ___ \\| |\\  |"
+echo " \\____|____/|_____\\___/\_____| |___/_/   \\_\_| \\_|"
+echo ""
+
+# Mount essential filesystems
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs udev /dev
+mount -t devpts devpts /dev/pts
+
+# Create essential directories
+mkdir -p /run/udev
+mkdir -p /var/run/dbus
+
+# Set hostname
+hostname gsiso-ai
+
+echo "[\e[32mOK\e[0m] Mounted filesystems and set up basic system"
+
+# Start udev
+if [ -x /sbin/udevd ]; then
+    echo -n "Starting udev... "
+    /sbin/udevd --daemon
+    /sbin/udevadm trigger --action=add --type=subsystems
+    /sbin/udevadm trigger --action=add --type=devices
+    /sbin/udevadm settle
+    echo "[\e[32mOK\e[0m]"
+fi
+
+# Load kernel modules
+modprobe loop
+modprobe overlay
+modprobe squashfs
+
+echo -n "Setting up loop devices... "
+for i in /sys/block/loop*; do
+    [ -e "$i" ] || continue
+    mknod -m 660 "${i#/sys/block/}" b 7 "${i#/sys/block/loop}"
+done
+echo "[\e[32mOK\e[0m]"
+
+# Set up network (simplified)
+echo -n "Setting up network... "
+ip link set lo up
+ip link set eth0 up
+dhcpcd --quiet eth0 || true
+echo "[\e[32mOK\e[0m]"
+
+# Set up logging
+mkdir -p /var/log
+syslogd
+
+# Start essential services
+echo -n "Starting essential services... "
+crond
+sshd
+
+echo "[\e[32mOK\e[0m]"
+
+# Drop to a shell
+if [ -x /bin/bash ]; then
+    exec /bin/bash --login
+else
+    exec /bin/sh
+fi
+
+# This should never be reached
+echo "Init process ended. Something went wrong!"
+exec /bin/sh
