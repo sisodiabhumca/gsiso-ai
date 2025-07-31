@@ -33,7 +33,7 @@ jobs:
         docker run --rm -v ${{ github.workspace }}:/workspace gsiso-builder /bin/bash -c "cd /workspace/iso && ./build.sh"
         
     - name: Upload ISO artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: gsiso-ai-iso
         path: ${{ github.workspace }}/iso/output/*.iso
