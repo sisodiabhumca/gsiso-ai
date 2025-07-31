@@ -1,0 +1,21 @@
+# Gsiso AI Build Configuration
+ISO_NAME="gsiso-ai"
+VERSION="1.0.0"
+ARCH="x86_64"
+BUILD_DIR="$(pwd)/iso"
+ISO_DIR="${BUILD_DIR}/gsiso"
+OUTPUT_DIR="${BUILD_DIR}/output"
+ISO_FILE="${ISO_NAME}-${VERSION}-${ARCH}.iso"
+
+# Packages to include in the ISO
+PACKAGES="busybox bash coreutils util-linux kmod udev e2fsprogs"
+
+# Kernel configuration (using host kernel for now)
+KERNEL_IMAGE="/boot/vmlinuz-$(uname -r)"
+
+# Bootloader configuration
+GRUB_CFG="${BUILD_DIR}/isolinux/grub.cfg"
+ISOLINUX_CFG="${BUILD_DIR}/isolinux/isolinux.cfg"
+
+# ISO build requirements
+REQUIRED_PACKAGES="grub2-common grub-pc-bin grub-efi-amd64-bin mtools xorriso squashfs-tools wget cpio genisoimage"
