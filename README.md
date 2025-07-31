@@ -22,23 +22,40 @@ Gsiso AI is a lightweight, user-friendly Linux distribution designed for efficie
 
 ## Quick Start
 
+### Download
+
+Download the latest stable release from our [Releases page](https://github.com/sisodiabhumca/gsiso-ai/releases/latest).
+
+### Installation
+
+1. **Create Bootable USB** (choose one method):
+   - **Recommended**: Use [Etcher](https://www.balena.io/etcher/)
+   - **Using dd** (Linux/macOS):
+     ```bash
+     # Replace /dev/sdX with your USB device
+     dd if=gsiso-ai-1.0.0-x86_64.iso of=/dev/sdX bs=4M status=progress
+     ```
+   - **Using Rufus** (Windows): [Download Rufus](https://rufus.ie/)
+
+2. **Boot from USB**:
+   - Restart your computer
+   - Enter boot menu (usually F12, F2, or DEL during startup)
+   - Select your USB drive
+
+3. **Follow the on-screen installation wizard**
+
 ### Building from Source
+
+If you want to build from source:
 
 ```bash
 # Clone the repository
 git clone https://github.com/sisodiabhumca/gsiso-ai.git
 cd gsiso-ai
 
-# Build the ISO
-./build.sh
+# Build the ISO (requires Docker)
+./iso/build.sh
 ```
-
-### Installation
-
-1. Download the latest ISO from our [releases page](https://github.com/sisodiabhumca/gsiso-ai/releases)
-2. Create a bootable USB: `dd if=gsiso-ai.iso of=/dev/sdX bs=4M status=progress`
-3. Boot from the USB drive
-4. Follow the on-screen installation wizard
 
 ## Documentation
 
