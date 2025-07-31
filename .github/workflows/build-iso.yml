@@ -1,0 +1,49 @@
+name: Build Gsiso AI ISO
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-iso:
+    name: Build ISO
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+      with:
+        platforms: all
+    
+    - name: Build Docker image
+      run: |
+        docker build -t gsiso-builder -f docker/Dockerfile .
+    
+    - name: Build ISO
+      run: |
+        mkdir -p ${{ github.workspace }}/artifacts
+        docker run --rm -v ${{ github.workspace }}:/workspace gsiso-builder /bin/bash -c "cd /workspace/iso && ./build.sh"
+        
+    - name: Upload ISO artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: gsiso-ai-iso
+        path: ${{ github.workspace }}/iso/output/*.iso
+        if-no-files-found: error
+        retention-days: 5
+    
+    - name: Upload to Release
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ github.workspace }}/iso/output/*.iso
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
