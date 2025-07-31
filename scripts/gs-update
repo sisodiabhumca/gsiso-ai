@@ -1,5 +1,5 @@
 #!/bin/sh
-# Gsiso AI System Update Script
+# gsiso ai system update script
 # This script updates the system packages and configurations
 
 VERSION="1.0.0"
@@ -114,7 +114,7 @@ cleanup() {
 
 # Main function
 main() {
-    log "INFO" "=== Starting Gsiso AI System Update v$VERSION ==="
+    log "INFO" "=== starting gsiso ai system update v$VERSION ==="
     
     # Load configuration
     load_config

@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide will walk you through the process of installing Gsiso AI Linux on your system.
+this guide will walk you through the process of installing gsiso ai linux on your system.
 
 ## Prerequisites
 

@@ -1,4 +1,4 @@
-# Gsiso AI Linux Documentation
+# gsiso ai linux documentation
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -13,7 +13,7 @@
 
 ## Overview
 
-Gsiso AI is a lightweight, fast, and user-friendly Linux distribution designed for modern hardware while maintaining compatibility with older systems. It's built with simplicity, security, and performance in mind.
+gsiso ai is a lightweight, fast, and user-friendly linux distribution designed for modern hardware while maintaining compatibility with older systems. it's built with simplicity, security, and performance in mind.
 
 ### Key Features
 - **Minimal Base**: Small footprint with essential components
@@ -58,7 +58,7 @@ Gsiso AI is a lightweight, fast, and user-friendly Linux distribution designed f
 ## Package Management
 
 ### gs-pkg
-Gsiso AI uses `gs-pkg` as its package manager. It's a simple yet powerful tool for managing software packages.
+gsiso ai uses `gs-pkg` as its package manager. it's a simple yet powerful tool for managing software packages.
 
 #### Basic Commands
 ```bash
@@ -172,4 +172,4 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ## License
 
-Gsiso AI is licensed under the [GNU General Public License v3.0](LICENSE).
+gsiso ai is licensed under the [gnu general public license v3.0](license).

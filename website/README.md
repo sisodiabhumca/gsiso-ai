@@ -1,6 +1,6 @@
-# Gsiso AI Website
+# gsiso ai website
 
-This is the official website for Gsiso AI Linux distribution. It's built with plain HTML and CSS for maximum compatibility and performance.
+this is the official website for gsiso ai linux distribution. it's built with plain html and css for maximum compatibility and performance.
 
 ## Features
 

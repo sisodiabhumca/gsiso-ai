@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Gsiso AI Linux Build Script
-# This script builds the Gsiso AI Linux distribution
+# gsiso ai linux build script
+# this script builds the gsiso ai linux distribution
 
 set -e
 
@@ -15,7 +15,7 @@ OUTPUT_DIR="${BUILD_DIR}/output"
 # Create necessary directories
 mkdir -p "${ISO_DIR}" "${WORK_DIR}" "${OUTPUT_DIR}"
 
-echo "=== Gsiso AI Linux Builder ==="
+echo "=== gsiso ai linux builder ==="
 echo "Version: ${VERSION}"
 echo "Build directory: ${BUILD_DIR}"
 
@@ -36,19 +36,19 @@ cat > "${ISO_DIR}/boot/grub/grub.cfg" << EOF
 set default=0
 set timeout=5
 
-menuentry "Gsiso AI Linux" {
+menuentry "gsiso ai linux" {
     linux /vmlinuz root=/dev/sr0 quiet splash
     initrd /initrd.img
 }
 
-menuentry "Gsiso AI Linux (Safe Mode)" {
+menuentry "gsiso ai linux (safe mode)" {
     linux /vmlinuz root=/dev/sr0 single
     initrd /initrd.img
 }
 EOF
 
 # Create a simple info file
-echo "Gsiso AI Linux ${VERSION}" > "${ISO_DIR}/gsiso/gsiso.info"
+echo "gsiso ai linux ${VERSION}" > "${ISO_DIR}/gsiso/gsiso.info"
 
 # Create the ISO
 echo "Creating ISO image..."
@@ -58,7 +58,7 @@ mkisofs -o "${OUTPUT_DIR}/gsiso-ai-${VERSION}.iso" \
     -boot-load-size 4 \
     -boot-info-table \
     -input-charset utf-8 \
-    -J -r -V "Gsiso AI ${VERSION}" \
+    -J -r -V "gsiso ai ${VERSION}" \
     "${ISO_DIR}"
 
 # Create checksum

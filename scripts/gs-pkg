@@ -1,6 +1,6 @@
 #!/bin/sh
-# Gsiso AI Package Manager - gs-pkg
-# A simple package manager for Gsiso AI Linux
+# gsiso ai package manager - gs-pkg
+# a simple package manager for gsiso ai linux
 
 VERSION="1.0.0"
 PKG_DIR="/var/cache/gs-pkg/packages"
@@ -26,7 +26,7 @@ check_root() {
 
 # Print usage information
 usage() {
-    echo "Gsiso AI Package Manager v$VERSION"
+    echo "gsiso ai package manager v$VERSION"
     echo "Usage: gs-pkg [command] [options] [packages...]"
     echo ""
     echo "Commands:"

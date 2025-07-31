@@ -1,6 +1,6 @@
-# Gsiso AI Linux Installation Guide
+# gsiso ai linux installation guide
 
-This guide will walk you through the process of installing Gsiso AI Linux on your system.
+this guide will walk you through the process of installing gsiso ai linux on your system.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ This guide will walk you through the process of installing Gsiso AI Linux on you
 1. Download and install [Rufus](https://rufus.ie/)
 2. Insert your USB drive
 3. Open Rufus and select your USB device
-4. Click "Select" and choose the Gsiso AI ISO file
+4. click "select" and choose the gsiso ai iso file
 5. Click "Start" and wait for the process to complete
 
 ## Installation Process
@@ -36,7 +36,7 @@ This guide will walk you through the process of installing Gsiso AI Linux on you
 1. Insert the bootable USB drive into your computer
 2. Restart your computer and enter the boot menu (usually F12, F2, or DEL key)
 3. Select your USB drive from the boot menu
-4. The Gsiso AI installer will start automatically
+4. the gsiso ai installer will start automatically
 
 ### Installation Wizard
 
@@ -106,10 +106,10 @@ gs-update
 
 ## Uninstallation
 
-To remove Gsiso AI Linux:
+to remove gsiso ai linux:
 
 1. Boot from a live USB of another OS
-2. Delete the Gsiso AI partitions
+2. delete the gsiso ai partitions
 3. Update your bootloader configuration
 
 For dual-boot systems, you may need to repair the bootloader of your other OS.

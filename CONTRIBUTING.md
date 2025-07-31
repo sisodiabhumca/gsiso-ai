@@ -1,6 +1,6 @@
-# Contributing to Gsiso AI Linux
+# contributing to gsiso ai linux
 
-Thank you for your interest in contributing to Gsiso AI Linux! We welcome all contributions, whether it's code, documentation, testing, or feature suggestions.
+thank you for your interest in contributing to gsiso ai linux! we welcome all contributions, whether it's code, documentation, testing, or feature suggestions.
 
 ## Table of Contents
 1. [Code of Conduct](#code-of-conduct)
@@ -88,7 +88,7 @@ Fixes #123
 
 When reporting issues, please include:
 
-1. Gsiso AI version (`cat /etc/gsiso-release`)
+1. gsiso ai version (`cat /etc/gsiso-release`)
 2. Steps to reproduce the issue
 3. Expected behavior
 4. Actual behavior
@@ -130,4 +130,4 @@ Join our community:
 
 ## License
 
-By contributing to Gsiso AI Linux, you agree that your contributions will be licensed under the [GNU General Public License v3.0](LICENSE).
+by contributing to gsiso ai linux, you agree that your contributions will be licensed under the [gnu general public license v3.0](license).
