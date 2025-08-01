@@ -31,11 +31,22 @@ jobs:
         echo "Building Docker image with real ISO capabilities..."
         docker build --progress=plain --no-cache -t gsiso-builder -f docker/Dockerfile . 2>&1 | tee build.log
         if [ $? -ne 0 ]; then
-          echo "Docker build failed. Log contents:"
+          echo "❌ Docker build failed. Log contents:"
           cat build.log
           exit 1
         fi
-        echo "Docker build completed successfully"
+        
+        # Verify the image was created
+        if ! docker images | grep -q gsiso-builder; then
+          echo "❌ Docker image was not created successfully"
+          echo "Available images:"
+          docker images
+          exit 1
+        fi
+        
+        echo "✅ Docker build completed successfully"
+        echo "Available images:"
+        docker images | grep gsiso-builder
     
     - name: Build Real Bootable ISO
       run: |
@@ -43,7 +54,15 @@ jobs:
         mkdir -p ${{ github.workspace }}/artifacts
         mkdir -p ${{ github.workspace }}/iso/output
         
-        echo "Building real bootable ISO in container..."
+        # Verify Docker image exists
+        if ! docker images | grep -q gsiso-builder; then
+          echo "❌ Docker image 'gsiso-builder' not found"
+          echo "Available images:"
+          docker images
+          exit 1
+        fi
+        
+        echo "✅ Docker image found, building real bootable ISO in container..."
         docker run --rm \
           --platform linux/amd64 \
           --privileged \
@@ -54,12 +73,12 @@ jobs:
           -c "set -e; ./build.sh" 2>&1 | tee iso-build.log
         
         if [ $? -ne 0 ]; then
-          echo "ISO build failed. Log contents:"
+          echo "❌ ISO build failed. Log contents:"
           cat iso-build.log
           exit 1
         fi
         
-        echo "Real bootable ISO build completed successfully"
+        echo "✅ Real bootable ISO build completed successfully"
         
         # Debug: Check what files were created
         echo "Checking created files:"

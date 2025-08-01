@@ -70,26 +70,58 @@ build_real_iso() {
     chmod +x "${SCRIPT_DIR}/build_real.sh"
     
     # Run the real ISO builder
-    "${SCRIPT_DIR}/build_real.sh"
+    if "${SCRIPT_DIR}/build_real.sh"; then
+        # Copy ISO to the expected location for GitHub Actions
+        if [ -f "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" ]; then
+            echo -e "${YELLOW}Copying ISO to expected location...${NC}"
+            mkdir -p "${SCRIPT_DIR}/output"
+            cp "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" "${SCRIPT_DIR}/output/"
+            echo -e "${GREEN}ISO copied to: ${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso${NC}"
+            
+            # List files in output directory
+            echo -e "${YELLOW}Files in output directory:${NC}"
+            ls -la "${SCRIPT_DIR}/output/"
+        else
+            echo -e "${RED}Error: ISO file not found in expected location${NC}"
+            echo -e "${YELLOW}Searching for ISO files...${NC}"
+            find "${SCRIPT_DIR}" -name "*.iso" -type f 2>/dev/null || echo "No ISO files found"
+            return 1
+        fi
+        
+        echo -e "${GREEN}Real bootable ISO created successfully${NC}"
+        return 0
+    else
+        echo -e "${YELLOW}Real ISO build failed, trying fallback...${NC}"
+        return 1
+    fi
+}
+
+# Build fallback ISO
+build_fallback_iso() {
+    echo -e "${YELLOW}Building fallback ISO...${NC}"
+    
+    # Make the fallback build script executable
+    chmod +x "${SCRIPT_DIR}/build_fallback.sh"
+    
+    # Run the fallback ISO builder
+    "${SCRIPT_DIR}/build_fallback.sh"
     
     # Copy ISO to the expected location for GitHub Actions
     if [ -f "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" ]; then
-        echo -e "${YELLOW}Copying ISO to expected location...${NC}"
+        echo -e "${YELLOW}Copying fallback ISO to expected location...${NC}"
         mkdir -p "${SCRIPT_DIR}/output"
         cp "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" "${SCRIPT_DIR}/output/"
-        echo -e "${GREEN}ISO copied to: ${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso${NC}"
+        echo -e "${GREEN}Fallback ISO copied to: ${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso${NC}"
         
         # List files in output directory
         echo -e "${YELLOW}Files in output directory:${NC}"
         ls -la "${SCRIPT_DIR}/output/"
     else
-        echo -e "${RED}Error: ISO file not found in expected location${NC}"
-        echo -e "${YELLOW}Searching for ISO files...${NC}"
-        find "${SCRIPT_DIR}" -name "*.iso" -type f 2>/dev/null || echo "No ISO files found"
+        echo -e "${RED}Error: Fallback ISO file not found${NC}"
         exit 1
     fi
     
-    echo -e "${GREEN}Real bootable ISO created successfully${NC}"
+    echo -e "${GREEN}Fallback ISO created successfully${NC}"
 }
 
 # Build minimal ISO (fallback)
@@ -426,7 +458,10 @@ main() {
     # Check build mode and proceed accordingly
     if check_build_mode; then
         echo -e "${GREEN}Building real bootable ISO...${NC}"
-        build_real_iso
+        if ! build_real_iso; then
+            echo -e "${YELLOW}Real ISO build failed, trying fallback...${NC}"
+            build_fallback_iso
+        fi
     else
         echo -e "${YELLOW}Building minimal ISO (development mode)...${NC}"
         build_minimal_iso
