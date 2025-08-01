@@ -106,6 +106,11 @@ create_iso() {
         # Create a tar.gz as fallback
         tar -czf "${OUTPUT_DIR}/${ISO_NAME}.tar.gz" -C "${BUILD_DIR}/iso-content" .
         echo -e "${GREEN}Created archive: ${OUTPUT_DIR}/${ISO_NAME}.tar.gz${NC}"
+        
+        # Also copy to the location expected by GitHub Actions
+        mkdir -p "$(pwd)/output"
+        cp "${OUTPUT_DIR}/${ISO_NAME}.tar.gz" "$(pwd)/output/"
+        echo -e "${GREEN}Archive also copied to: $(pwd)/output/${ISO_NAME}.tar.gz${NC}"
         return 0
     fi
     
@@ -113,6 +118,11 @@ create_iso() {
     if [ -f "${iso_file}" ]; then
         echo -e "${GREEN}ISO created successfully: ${iso_file}${NC}"
         echo -e "${GREEN}Size: $(du -h "${iso_file}" | cut -f1)${NC}"
+        
+        # Also copy to the location expected by GitHub Actions
+        mkdir -p "$(pwd)/output"
+        cp "${iso_file}" "$(pwd)/output/"
+        echo -e "${GREEN}ISO also copied to: $(pwd)/output/${ISO_NAME}.iso${NC}"
     else
         echo -e "${RED}Error: ISO file was not created${NC}"
         exit 1

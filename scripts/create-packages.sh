@@ -69,8 +69,8 @@ build_gs_pkg() {
     
     local pkg_dir=$(create_package_structure "gs-pkg" "1.0.0")
     
-    # Copy gs-pkg script
-    cp scripts/gs-pkg "${pkg_dir}/usr/bin/"
+    # Copy gs-pkg script (use absolute path)
+    cp /workspace/scripts/gs-pkg "${pkg_dir}/usr/bin/"
     chmod +x "${pkg_dir}/usr/bin/gs-pkg"
     
     # Create package metadata
@@ -90,8 +90,8 @@ build_gs_update() {
     
     local pkg_dir=$(create_package_structure "gs-update" "1.0.0")
     
-    # Copy gs-update script
-    cp scripts/gs-update "${pkg_dir}/usr/bin/"
+    # Copy gs-update script (use absolute path)
+    cp /workspace/scripts/gs-update "${pkg_dir}/usr/bin/"
     chmod +x "${pkg_dir}/usr/bin/gs-update"
     
     # Create package metadata
@@ -111,12 +111,12 @@ build_gsiso_init() {
     
     local pkg_dir=$(create_package_structure "gsiso-init" "1.0.0")
     
-    # Copy gsiso-init script
-    cp scripts/gsiso-init "${pkg_dir}/usr/bin/"
+    # Copy gsiso-init script (use absolute path)
+    cp /workspace/scripts/gsiso-init "${pkg_dir}/usr/bin/"
     chmod +x "${pkg_dir}/usr/bin/gsiso-init"
     
-    # Copy configuration files
-    cp etc/gsiso.conf "${pkg_dir}/etc/"
+    # Copy configuration files (use absolute path)
+    cp /workspace/etc/gsiso.conf "${pkg_dir}/etc/"
     
     # Create package metadata
     create_package_metadata "${pkg_dir}" "gsiso-init" "1.0.0" "Gsiso AI Linux System Initialization" "bash systemd"

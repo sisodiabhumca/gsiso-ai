@@ -53,13 +53,23 @@ check_build_mode() {
 build_packages() {
     echo -e "${YELLOW}Building packages...${NC}"
     
-    if [ -f "${SCRIPT_DIR}/../scripts/create-packages.sh" ]; then
+    # Change to workspace directory to ensure correct paths
+    cd /workspace
+    
+    if [ -f "scripts/create-packages.sh" ]; then
         echo -e "${YELLOW}Running package builder...${NC}"
-        "${SCRIPT_DIR}/../scripts/create-packages.sh"
+        chmod +x scripts/create-packages.sh
+        scripts/create-packages.sh
         echo -e "${GREEN}Packages built successfully${NC}"
     else
         echo -e "${YELLOW}Package builder not found, skipping${NC}"
+        echo "Current directory: $(pwd)"
+        echo "Available files:"
+        ls -la scripts/ || echo "scripts directory not found"
     fi
+    
+    # Return to iso directory
+    cd iso
 }
 
 # Build real bootable ISO

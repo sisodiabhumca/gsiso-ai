@@ -305,6 +305,11 @@ create_bootable_iso() {
         # List all files in output directory
         echo -e "${YELLOW}Files in output directory:${NC}"
         ls -la "${OUTPUT_DIR}/"
+        
+        # Also copy to the location expected by GitHub Actions
+        mkdir -p "$(pwd)/output"
+        cp "${OUTPUT_DIR}/${ISO_NAME}.iso" "$(pwd)/output/"
+        echo -e "${GREEN}ISO also copied to: $(pwd)/output/${ISO_NAME}.iso${NC}"
     else
         echo -e "${RED}Error: ISO file was not created${NC}"
         echo -e "${YELLOW}Contents of output directory:${NC}"
