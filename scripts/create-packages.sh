@@ -129,6 +129,209 @@ build_gsiso_init() {
     echo -e "${GREEN}gsiso-init package created${NC}"
 }
 
+# Build gsiso-desktop package
+build_gsiso_desktop() {
+    echo -e "${YELLOW}Building gsiso-desktop package...${NC}"
+    
+    local pkg_dir=$(create_package_structure "gsiso-desktop" "1.0.0")
+    
+    # Create desktop environment setup script
+    cat > "${pkg_dir}/usr/bin/gsiso-desktop-setup" << 'EOF'
+#!/bin/bash
+
+# Gsiso AI Linux Desktop Environment Setup
+# This script sets up a lightweight desktop environment
+
+echo "Setting up Gsiso AI Linux Desktop Environment..."
+
+# Install XFCE4 (lightweight desktop)
+apt-get update
+apt-get install -y xfce4 xfce4-goodies
+
+# Install additional applications
+apt-get install -y \
+    firefox \
+    libreoffice-writer \
+    libreoffice-calc \
+    gimp \
+    vlc \
+    transmission-gtk \
+    gedit \
+    file-roller \
+    gnome-calculator \
+    gnome-screenshot
+
+# Configure autostart
+mkdir -p /etc/xdg/autostart
+cat > /etc/xdg/autostart/gsiso-welcome.desktop << 'DESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Gsiso AI Welcome
+Comment=Welcome to Gsiso AI Linux
+Exec=firefox https://github.com/sisodiabhumca/gsiso-ai
+Terminal=false
+DESKTOP
+
+echo "Desktop environment setup complete!"
+echo "Reboot to start the desktop environment."
+EOF
+
+    chmod +x "${pkg_dir}/usr/bin/gsiso-desktop-setup"
+    
+    # Create package metadata
+    create_package_metadata "${pkg_dir}" "gsiso-desktop" "1.0.0" "Gsiso AI Linux Desktop Environment" "bash gsiso-init"
+    
+    # Create package archive
+    cd "${pkg_dir}"
+    tar -cJf "${REPO_DIR}/gsiso-desktop-1.0.0.tar.xz" .
+    cd - > /dev/null
+    
+    echo -e "${GREEN}gsiso-desktop package created${NC}"
+}
+
+# Build gsiso-apps package
+build_gsiso_apps() {
+    echo -e "${YELLOW}Building gsiso-apps package...${NC}"
+    
+    local pkg_dir=$(create_package_structure "gsiso-apps" "1.0.0")
+    
+    # Create applications installer script
+    cat > "${pkg_dir}/usr/bin/gsiso-install-apps" << 'EOF'
+#!/bin/bash
+
+# Gsiso AI Linux Applications Installer
+# This script installs essential applications
+
+echo "Installing Gsiso AI Linux Applications..."
+
+# Update package lists
+apt-get update
+
+# Install essential applications
+apt-get install -y \
+    # Web browsers
+    firefox \
+    chromium-browser \
+    
+    # Office suite
+    libreoffice-writer \
+    libreoffice-calc \
+    libreoffice-impress \
+    
+    # Media applications
+    vlc \
+    audacity \
+    gimp \
+    inkscape \
+    
+    # Development tools
+    code \
+    git \
+    python3-pip \
+    nodejs \
+    npm \
+    
+    # System tools
+    htop \
+    neofetch \
+    screenfetch \
+    tree \
+    ncdu \
+    
+    # Network tools
+    wget \
+    curl \
+    nmap \
+    net-tools \
+    
+    # File management
+    thunar \
+    file-roller \
+    gparted \
+    
+    # Communication
+    thunderbird \
+    telegram-desktop \
+    
+    # Utilities
+    gnome-calculator \
+    gnome-screenshot \
+    gedit \
+    nano \
+    vim
+
+echo "Applications installation complete!"
+EOF
+
+    chmod +x "${pkg_dir}/usr/bin/gsiso-install-apps"
+    
+    # Create package metadata
+    create_package_metadata "${pkg_dir}" "gsiso-apps" "1.0.0" "Gsiso AI Linux Essential Applications" "bash gsiso-init"
+    
+    # Create package archive
+    cd "${pkg_dir}"
+    tar -cJf "${REPO_DIR}/gsiso-apps-1.0.0.tar.xz" .
+    cd - > /dev/null
+    
+    echo -e "${GREEN}gsiso-apps package created${NC}"
+}
+
+# Build gsiso-tools package
+build_gsiso_tools() {
+    echo -e "${YELLOW}Building gsiso-tools package...${NC}"
+    
+    local pkg_dir=$(create_package_structure "gsiso-tools" "1.0.0")
+    
+    # Create system tools script
+    cat > "${pkg_dir}/usr/bin/gsiso-system-info" << 'EOF'
+#!/bin/bash
+
+# Gsiso AI Linux System Information Tool
+
+echo "========================================"
+echo "  Gsiso AI Linux System Information"
+echo "========================================"
+
+echo "System Information:"
+echo "  OS: $(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2)"
+echo "  Kernel: $(uname -r)"
+echo "  Architecture: $(uname -m)"
+echo "  Hostname: $(hostname)"
+echo "  Uptime: $(uptime -p)"
+
+echo ""
+echo "Hardware Information:"
+echo "  CPU: $(lscpu | grep 'Model name' | cut -d':' -f2 | xargs)"
+echo "  Memory: $(free -h | grep Mem | awk '{print $2}')"
+echo "  Disk Usage: $(df -h / | tail -1 | awk '{print $5}')"
+
+echo ""
+echo "Network Information:"
+echo "  IP Address: $(hostname -I | awk '{print $1}')"
+echo "  Network Interfaces:"
+ip addr show | grep -E "^[0-9]+:" | awk '{print "    " $2 " " $3}'
+
+echo ""
+echo "Package Information:"
+echo "  Installed Packages: $(dpkg -l | wc -l)"
+echo "  Gsiso Packages: $(gs-pkg list-installed | wc -l)"
+
+echo "========================================"
+EOF
+
+    chmod +x "${pkg_dir}/usr/bin/gsiso-system-info"
+    
+    # Create package metadata
+    create_package_metadata "${pkg_dir}" "gsiso-tools" "1.0.0" "Gsiso AI Linux System Tools" "bash gsiso-init"
+    
+    # Create package archive
+    cd "${pkg_dir}"
+    tar -cJf "${REPO_DIR}/gsiso-tools-1.0.0.tar.xz" .
+    cd - > /dev/null
+    
+    echo -e "${GREEN}gsiso-tools package created${NC}"
+}
+
 # Build core packages
 build_core_packages() {
     echo -e "${YELLOW}Building core packages...${NC}"
@@ -140,6 +343,9 @@ build_core_packages() {
     build_gs_pkg
     build_gs_update
     build_gsiso_init
+    build_gsiso_desktop
+    build_gsiso_apps
+    build_gsiso_tools
     
     echo -e "${GREEN}Core packages built successfully${NC}"
 }
@@ -153,9 +359,15 @@ create_package_database() {
 # Gsiso AI Linux Package Database
 # Generated on: $(date)
 
+# Core System Packages
 gs-pkg-1.0.0.tar.xz
 gs-update-1.0.0.tar.xz
 gsiso-init-1.0.0.tar.xz
+
+# Desktop and Applications
+gsiso-desktop-1.0.0.tar.xz
+gsiso-apps-1.0.0.tar.xz
+gsiso-tools-1.0.0.tar.xz
 EOF
     
     # Create package index
@@ -164,17 +376,44 @@ EOF
 <html>
 <head>
     <title>Gsiso AI Linux Package Repository</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .package { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .core { background-color: #e8f5e8; }
+        .desktop { background-color: #e8f0f8; }
+        .apps { background-color: #fff8e8; }
+    </style>
 </head>
 <body>
     <h1>Gsiso AI Linux Package Repository</h1>
     <p>This repository contains packages for Gsiso AI Linux.</p>
-    <h2>Available Packages:</h2>
-    <ul>
-        <li><a href="gs-pkg-1.0.0.tar.xz">gs-pkg-1.0.0.tar.xz</a> - Package Manager</li>
-        <li><a href="gs-update-1.0.0.tar.xz">gs-update-1.0.0.tar.xz</a> - System Update Tool</li>
-        <li><a href="gsiso-init-1.0.0.tar.xz">gsiso-init-1.0.0.tar.xz</a> - System Initialization</li>
-    </ul>
-    <p>Generated on: $(date)</p>
+    
+    <h2>Core System Packages:</h2>
+    <div class="package core">
+        <a href="gs-pkg-1.0.0.tar.xz">gs-pkg-1.0.0.tar.xz</a> - Package Manager
+    </div>
+    <div class="package core">
+        <a href="gs-update-1.0.0.tar.xz">gs-update-1.0.0.tar.xz</a> - System Update Tool
+    </div>
+    <div class="package core">
+        <a href="gsiso-init-1.0.0.tar.xz">gsiso-init-1.0.0.tar.xz</a> - System Initialization
+    </div>
+    
+    <h2>Desktop Environment:</h2>
+    <div class="package desktop">
+        <a href="gsiso-desktop-1.0.0.tar.xz">gsiso-desktop-1.0.0.tar.xz</a> - XFCE4 Desktop Environment
+    </div>
+    
+    <h2>Applications:</h2>
+    <div class="package apps">
+        <a href="gsiso-apps-1.0.0.tar.xz">gsiso-apps-1.0.0.tar.xz</a> - Essential Applications
+    </div>
+    <div class="package apps">
+        <a href="gsiso-tools-1.0.0.tar.xz">gsiso-tools-1.0.0.tar.xz</a> - System Tools
+    </div>
+    
+    <p><strong>Generated on:</strong> $(date)</p>
+    <p><strong>Total Packages:</strong> 6</p>
 </body>
 </html>
 EOF
@@ -211,9 +450,12 @@ main() {
     echo "  Package building completed!"
     echo "  Repository: ${REPO_DIR}"
     echo "  Packages:"
-    echo "    - gs-pkg-1.0.0.tar.xz"
-    echo "    - gs-update-1.0.0.tar.xz"
-    echo "    - gsiso-init-1.0.0.tar.xz"
+    echo "    - gs-pkg-1.0.0.tar.xz (Package Manager)"
+    echo "    - gs-update-1.0.0.tar.xz (System Updates)"
+    echo "    - gsiso-init-1.0.0.tar.xz (System Init)"
+    echo "    - gsiso-desktop-1.0.0.tar.xz (XFCE4 Desktop)"
+    echo "    - gsiso-apps-1.0.0.tar.xz (Essential Apps)"
+    echo "    - gsiso-tools-1.0.0.tar.xz (System Tools)"
     echo "========================================"
     echo -e "${NC}"
 }

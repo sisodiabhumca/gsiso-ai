@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-iso:
-    name: Build ISO
+    name: Build Real Bootable ISO
     runs-on: ubuntu-latest
     
     steps:
@@ -28,7 +28,7 @@ jobs:
     
     - name: Build Docker image
       run: |
-        echo "Building Docker image with debug output..."
+        echo "Building Docker image with real ISO capabilities..."
         docker build --progress=plain --no-cache -t gsiso-builder -f docker/Dockerfile . 2>&1 | tee build.log
         if [ $? -ne 0 ]; then
           echo "Docker build failed. Log contents:"
@@ -37,15 +37,16 @@ jobs:
         fi
         echo "Docker build completed successfully"
     
-    - name: Build ISO
+    - name: Build Real Bootable ISO
       run: |
         echo "Creating artifacts directory..."
         mkdir -p ${{ github.workspace }}/artifacts
         mkdir -p ${{ github.workspace }}/iso/output
         
-        echo "Running ISO build in container..."
+        echo "Building real bootable ISO in container..."
         docker run --rm \
           --platform linux/amd64 \
+          --privileged \
           -v ${{ github.workspace }}:/workspace \
           -w /workspace/iso \
           --entrypoint /bin/sh \
@@ -58,22 +59,42 @@ jobs:
           exit 1
         fi
         
-        echo "ISO build completed successfully"
+        echo "Real bootable ISO build completed successfully"
         
         # Debug: Check what files were created
         echo "Checking created files:"
         ls -la ${{ github.workspace }}/iso/output/ || echo "No output directory found"
         find ${{ github.workspace }}/iso/ -name "*.iso" -type f || echo "No ISO files found"
+        find ${{ github.workspace }}/iso/ -name "*.tar.gz" -type f || echo "No archive files found"
+        
+    - name: Validate ISO
+      run: |
+        echo "Validating ISO file..."
+        ISO_FILE=$(find ${{ github.workspace }}/iso/output/ -name "*.iso" -type f | head -1)
+        if [ -n "$ISO_FILE" ]; then
+          echo "Found ISO: $ISO_FILE"
+          echo "ISO size: $(du -h "$ISO_FILE" | cut -f1)"
+          
+          # Check if ISO is valid
+          if file "$ISO_FILE" | grep -q "ISO 9660"; then
+            echo "✅ ISO validation passed - Valid ISO 9660 format"
+          else
+            echo "⚠️ ISO validation warning - Not standard ISO format"
+          fi
+        else
+          echo "❌ No ISO file found"
+          exit 1
+        fi
         
     - name: Upload ISO artifact
       uses: actions/upload-artifact@v4
       with:
-        name: gsiso-ai-iso
+        name: gsiso-ai-bootable-iso
         path: |
           ${{ github.workspace }}/iso/output/*.iso
           ${{ github.workspace }}/iso/output/*.tar.gz
-        if-no-files-found: warn
-        retention-days: 5
+        if-no-files-found: error
+        retention-days: 30
     
     - name: Upload to Release
       if: github.event_name == 'release'

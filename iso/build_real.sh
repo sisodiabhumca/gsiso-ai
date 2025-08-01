@@ -104,6 +104,60 @@ install_essential_packages() {
     echo -e "${GREEN}Essential packages installed${NC}"
 }
 
+# Install desktop environment
+install_desktop_environment() {
+    echo -e "${YELLOW}Installing desktop environment...${NC}"
+    
+    # Mount necessary filesystems
+    mount --bind /dev "${ROOTFS_DIR}/dev"
+    mount --bind /proc "${ROOTFS_DIR}/proc"
+    mount --bind /sys "${ROOTFS_DIR}/sys"
+    
+    # Install XFCE4 desktop environment
+    chroot "${ROOTFS_DIR}" apt-get update
+    chroot "${ROOTFS_DIR}" apt-get install -y \
+        xfce4 \
+        xfce4-goodies \
+        lightdm \
+        lightdm-gtk-greeter \
+        plymouth \
+        plymouth-theme-ubuntu-logo
+    
+    # Install additional desktop applications
+    chroot "${ROOTFS_DIR}" apt-get install -y \
+        firefox \
+        libreoffice-writer \
+        libreoffice-calc \
+        gimp \
+        vlc \
+        transmission-gtk \
+        gedit \
+        file-roller \
+        gnome-calculator \
+        gnome-screenshot \
+        thunar \
+        gparted \
+        htop \
+        neofetch \
+        tree \
+        wget \
+        curl \
+        git \
+        python3-pip \
+        code
+    
+    # Clean up
+    chroot "${ROOTFS_DIR}" apt-get clean
+    chroot "${ROOTFS_DIR}" apt-get autoremove -y
+    
+    # Unmount
+    umount "${ROOTFS_DIR}/dev"
+    umount "${ROOTFS_DIR}/proc"
+    umount "${ROOTFS_DIR}/sys"
+    
+    echo -e "${GREEN}Desktop environment installed${NC}"
+}
+
 # Configure system
 configure_system() {
     echo -e "${YELLOW}Configuring system...${NC}"
@@ -139,7 +193,61 @@ EOF
     chroot "${ROOTFS_DIR}" systemctl enable systemd-networkd
     chroot "${ROOTFS_DIR}" systemctl enable systemd-resolved
     
+    # Configure display manager
+    chroot "${ROOTFS_DIR}" systemctl enable lightdm
+    
     echo -e "${GREEN}System configured${NC}"
+}
+
+# Configure desktop environment
+configure_desktop_environment() {
+    echo -e "${YELLOW}Configuring desktop environment...${NC}"
+    
+    # Create desktop autostart
+    mkdir -p "${ROOTFS_DIR}/etc/xdg/autostart"
+    cat > "${ROOTFS_DIR}/etc/xdg/autostart/gsiso-welcome.desktop" << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=Gsiso AI Welcome
+Comment=Welcome to Gsiso AI Linux
+Exec=firefox https://github.com/sisodiabhumca/gsiso-ai
+Terminal=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+    # Create desktop shortcuts
+    mkdir -p "${ROOTFS_DIR}/home/gsiso/Desktop"
+    cat > "${ROOTFS_DIR}/home/gsiso/Desktop/Gsiso AI Welcome.desktop" << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=Gsiso AI Welcome
+Comment=Welcome to Gsiso AI Linux
+Exec=firefox https://github.com/sisodiabhumca/gsiso-ai
+Icon=firefox
+Terminal=false
+EOF
+
+    # Set proper permissions
+    chroot "${ROOTFS_DIR}" chown -R gsiso:gsiso /home/gsiso/Desktop
+    chroot "${ROOTFS_DIR}" chmod +x /home/gsiso/Desktop/*.desktop
+    
+    # Configure XFCE4 settings
+    mkdir -p "${ROOTFS_DIR}/home/gsiso/.config/xfce4/xfconf/xfce-perchannel-xml"
+    cat > "${ROOTFS_DIR}/home/gsiso/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-desktop" version="1.0">
+  <property name="desktop-icons" type="empty">
+    <property name="file-icons" type="empty">
+      <property name="show-home" type="bool" value="true"/>
+      <property name="show-trash" type="bool" value="true"/>
+    </property>
+  </property>
+</channel>
+EOF
+
+    chroot "${ROOTFS_DIR}" chown -R gsiso:gsiso /home/gsiso/.config
+    
+    echo -e "${GREEN}Desktop environment configured${NC}"
 }
 
 # Create ISO structure
@@ -168,6 +276,11 @@ menuentry "Gsiso AI Linux (Safe Mode)" {
     linux /vmlinuz boot=casper nomodeset
     initrd /initrd
 }
+
+menuentry "Gsiso AI Linux (Text Mode)" {
+    linux /vmlinuz boot=casper text
+    initrd /initrd
+}
 EOF
     
     echo -e "${GREEN}ISO structure created${NC}"
@@ -190,7 +303,9 @@ main() {
     check_dependencies
     create_base_filesystem
     install_essential_packages
+    install_desktop_environment
     configure_system
+    configure_desktop_environment
     create_iso_structure
     create_bootable_iso
     
@@ -198,6 +313,16 @@ main() {
     echo "========================================"
     echo "  Build completed successfully!"
     echo "  ISO: ${OUTPUT_DIR}/${ISO_NAME}.iso"
+    echo ""
+    echo "  Features included:"
+    echo "  - Ubuntu-based Linux system"
+    echo "  - XFCE4 desktop environment"
+    echo "  - Firefox, LibreOffice, GIMP, VLC"
+    echo "  - Development tools (VS Code, Git)"
+    echo "  - System utilities and tools"
+    echo ""
+    echo "  Default login: gsiso / gsiso"
+    echo "  Root password: root"
     echo "========================================"
     echo -e "${NC}"
 }
