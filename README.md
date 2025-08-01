@@ -1,6 +1,6 @@
 # Gsiso AI Linux 🐧
 
-[![Build Status](https://github.com/sisodiabhumca/gsiso-ai/workflows/Build%20ISO/badge.svg)](https://github.com/sisodiabhumca/gsiso-ai/actions)
+![Gsiso AI Logo](gsiso%20ai.jpg)
 
 **A complete, modern Linux distribution with desktop environment, package management, and professional installation experience.**
 
@@ -8,52 +8,58 @@
 
 **Gsiso AI Linux has evolved from a framework to a fully functional Linux distribution!** This release includes:
 
-- ✅ **Complete XFCE4 Desktop Environment**
-- ✅ **Real Bootable ISO Creation**
-- ✅ **6 Comprehensive Packages**
-- ✅ **Professional Installation Experience**
-- ✅ **Essential Applications Included**
+* ✅ **Complete XFCE4 Desktop Environment**
+* ✅ **Real Bootable ISO Creation**
+* ✅ **6 Comprehensive Packages**
+* ✅ **Professional Installation Experience**
+* ✅ **Essential Applications Included**
 
-**[📥 Download Now](https://github.com/sisodiabhumca/gsiso-ai/actions)** | **[📖 Installation Guide](INSTALL.md)** | **[📋 Release Notes](RELEASE_NOTES.md)**
+**📥 Download Now** | **📖 Installation Guide** | **📋 Release Notes**
 
 ---
 
 ## 🚀 **Features**
 
 ### **Complete Linux Distribution**
-- **Ubuntu-based System**: Built on Ubuntu 22.04 LTS for stability
-- **Real Bootable ISO**: Install on physical hardware or virtual machines
-- **Live Environment**: Test before installation
-- **Multiple Boot Options**: Normal, Safe Mode, and Text Mode
+
+* **Ubuntu-based System**: Built on Ubuntu 22.04 LTS for stability
+* **Real Bootable ISO**: Install on physical hardware or virtual machines
+* **Live Environment**: Test before installation
+* **Multiple Boot Options**: Normal, Safe Mode, and Text Mode
 
 ### **Desktop Environment**
-- **XFCE4 Desktop**: Lightweight, fast, and customizable
-- **LightDM Display Manager**: Professional login screen
-- **Plymouth Boot Splash**: Beautiful boot animation
-- **Desktop Shortcuts**: Welcome screen and project links
+
+* **XFCE4 Desktop**: Lightweight, fast, and customizable
+* **LightDM Display Manager**: Professional login screen
+* **Plymouth Boot Splash**: Beautiful boot animation
+* **Desktop Shortcuts**: Welcome screen and project links
 
 ### **Package Management**
-- **Custom Package Manager**: `gs-pkg` for software management
-- **System Updater**: `gs-update` for system maintenance
-- **Local Repository**: Self-contained package system
-- **6 Core Packages**: Desktop, apps, tools, and utilities
+
+* **Custom Package Manager**: `gs-pkg` for software management
+* **System Updater**: `gs-update` for system maintenance
+* **Local Repository**: Self-contained package system
+* **6 Core Packages**: Desktop, apps, tools, and utilities
 
 ### **Essential Applications**
-- **Web Browser**: Firefox
-- **Office Suite**: LibreOffice (Writer, Calc, Impress)
-- **Media Applications**: VLC, GIMP, Audacity
-- **Development Tools**: VS Code, Git, Python, Node.js
-- **System Utilities**: GParted, Htop, Neofetch, Tree
+
+* **Web Browser**: Firefox
+* **Office Suite**: LibreOffice (Writer, Calc, Impress)
+* **Media Applications**: VLC, GIMP, Audacity
+* **Development Tools**: VS Code, Git, Python, Node.js
+* **System Utilities**: GParted, Htop, Neofetch, Tree
 
 ## 🛠️ **Quick Start**
 
 ### **For Users**
-1. **[Download the ISO](https://github.com/sisodiabhumca/gsiso-ai/actions)** from GitHub Actions
+
+1. **Download the ISO** from GitHub Actions
 2. Create a bootable USB drive
 3. Boot and install on your system
 4. **Default login**: `gsiso` / `gsiso`
 
 ### **For Developers**
+
 ```bash
 # Clone the repository
 git clone https://github.com/sisodiabhumca/gsiso-ai.git
@@ -69,16 +75,18 @@ sudo ./scripts/create-packages.sh
 ## 📋 **System Requirements**
 
 ### **Minimum**
-- x86_64 processor
-- 2GB RAM
-- 10GB storage
-- VGA-compatible graphics
+
+* x86_64 processor
+* 2GB RAM
+* 10GB storage
+* VGA-compatible graphics
 
 ### **Recommended**
-- Multi-core x86_64 processor
-- 4GB+ RAM
-- 20GB+ storage
-- Modern graphics card
+
+* Multi-core x86_64 processor
+* 4GB+ RAM
+* 20GB+ storage
+* Modern graphics card
 
 ## 📁 **Project Structure**
 
@@ -104,68 +112,76 @@ gsiso-ai/
 ## 🎯 **What's New in v1.0.0**
 
 ### **Major Achievements**
-- ✅ **Real Linux Distribution**: Complete Ubuntu-based system
-- ✅ **Desktop Environment**: XFCE4 with all essential components
-- ✅ **Bootable ISO**: Install on real hardware
-- ✅ **Package System**: 6 comprehensive packages
-- ✅ **Professional Build**: Reliable CI/CD pipeline
+
+* ✅ **Real Linux Distribution**: Complete Ubuntu-based system
+* ✅ **Desktop Environment**: XFCE4 with all essential components
+* ✅ **Bootable ISO**: Install on real hardware
+* ✅ **Package System**: 6 comprehensive packages
+* ✅ **Professional Build**: Reliable CI/CD pipeline
 
 ### **Technical Improvements**
-- ✅ **Simplified Build Process**: Faster, more reliable builds
-- ✅ **Enhanced Error Handling**: Comprehensive debugging
-- ✅ **Fallback Systems**: Ensures output even if main build fails
-- ✅ **Path Resolution**: Fixed all path-related issues
-- ✅ **Dual Output**: Files available where needed
+
+* ✅ **Simplified Build Process**: Faster, more reliable builds
+* ✅ **Enhanced Error Handling**: Comprehensive debugging
+* ✅ **Fallback Systems**: Ensures output even if main build fails
+* ✅ **Path Resolution**: Fixed all path-related issues
+* ✅ **Dual Output**: Files available where needed
 
 ## 📚 **Documentation**
 
-- **[Installation Guide](INSTALL.md)** - Complete installation instructions
-- **[Release Notes](RELEASE_NOTES.md)** - Detailed v1.0.0 release information
-- **[Wiki](https://github.com/sisodiabhumca/gsiso-ai/wiki)** - Project documentation
-- **[Contributing](CONTRIBUTING.md)** - How to contribute to the project
+* **Installation Guide** - Complete installation instructions
+* **Release Notes** - Detailed v1.0.0 release information
+* **Wiki** - Project documentation
+* **Contributing** - How to contribute to the project
 
 ## 🔧 **Development Status**
 
 **Current Status**: **ALPHA RELEASE** - Ready for testing and feedback
 
 ### **What's Working**
-- ✅ Real bootable ISO creation
-- ✅ XFCE4 desktop environment
-- ✅ Package management system
-- ✅ System initialization
-- ✅ GitHub Actions CI/CD
-- ✅ Comprehensive documentation
+
+* ✅ Real bootable ISO creation
+* ✅ XFCE4 desktop environment
+* ✅ Package management system
+* ✅ System initialization
+* ✅ GitHub Actions CI/CD
+* ✅ Comprehensive documentation
 
 ### **Areas for Improvement**
-- 🔄 Additional desktop environments (KDE, GNOME)
-- 🔄 More applications and packages
-- 🔄 Performance optimization
-- 🔄 Security enhancements
-- 🔄 Localization support
+
+* 🔄 Additional desktop environments (KDE, GNOME)
+* 🔄 More applications and packages
+* 🔄 Performance optimization
+* 🔄 Security enhancements
+* 🔄 Localization support
 
 ## 🛣️ **Roadmap**
 
 ### **Phase 1: Foundation** ✅ **COMPLETE**
-- Basic system structure
-- Package management framework
-- Documentation and wiki
+
+* Basic system structure
+* Package management framework
+* Documentation and wiki
 
 ### **Phase 2: Real Distribution** ✅ **COMPLETE**
-- Real bootable ISO creation
-- Desktop environment integration
-- Professional installation experience
+
+* Real bootable ISO creation
+* Desktop environment integration
+* Professional installation experience
 
 ### **Phase 3: Enhancement** 🔄 **IN PROGRESS**
-- Additional desktop environments
-- More applications and packages
-- Performance optimization
-- Security features
+
+* Additional desktop environments
+* More applications and packages
+* Performance optimization
+* Security features
 
 ### **Phase 4: Production** 📋 **PLANNED**
-- Beta release
-- Community testing
-- Performance tuning
-- Security hardening
+
+* Beta release
+* Community testing
+* Performance tuning
+* Security hardening
 
 ## 🤝 **Contributing**
 
@@ -177,21 +193,21 @@ We welcome contributions! Here's how you can help:
 4. **Report Bugs**: Use GitHub Issues for bug reports
 5. **Suggest Features**: Share ideas for improvements
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+See CONTRIBUTING.md for detailed guidelines.
 
 ## 📄 **License**
 
-This project is licensed under the GPL License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL License. See the LICENSE file for details.
 
 ## 🙏 **Acknowledgments**
 
-- **Ubuntu Project**: Base system and packages
-- **XFCE Team**: Desktop environment
-- **Open Source Community**: All the amazing tools and libraries
-- **Contributors**: Everyone who helped make this possible
+* **Ubuntu Project**: Base system and packages
+* **XFCE Team**: Desktop environment
+* **Open Source Community**: All the amazing tools and libraries
+* **Contributors**: Everyone who helped make this possible
 
 ---
 
 **Gsiso AI Linux v1.0.0** - A complete, modern Linux distribution for everyone! 🐧✨
 
-**[📥 Download Now](https://github.com/sisodiabhumca/gsiso-ai/actions)** | **[🐛 Report Issues](https://github.com/sisodiabhumca/gsiso-ai/issues)** | **[💬 Join Discussion](https://github.com/sisodiabhumca/gsiso-ai/discussions)**
+**📥 Download Now** | **🐛 Report Issues** | **�� Join Discussion**

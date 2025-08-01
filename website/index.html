@@ -3,15 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gsiso AI Linux - Complete Linux Distribution with Desktop Environment</title>
-    <meta name="description" content="Gsiso AI Linux is a complete, modern Linux distribution with XFCE4 desktop environment, package management, and professional installation experience.">
+    <title>gsiso ai - lightweight linux distribution</title>
+    <meta name="description" content="gsiso ai is a lightweight, fast, and user-friendly linux distribution designed for modern hardware while maintaining compatibility with older systems.">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Logo in navigation */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .logo-img {
+            height: 2.5rem;
+            width: auto;
+            border-radius: 4px;
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        /* Hero section with logo */
+        .hero-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Brand colors */
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cae;
+            --accent-color: #ff6b6b;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --text-color: #333;
+            --text-light: #6c757d;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">gsiso ai</div>
+            <div class="logo">
+                <img src="assets/img/gsiso-ai-logo.jpg" alt="gsiso ai logo" class="logo-img">
+                <span class="logo-text">gsiso ai</span>
+            </div>
             <ul>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#download">Download</a></li>
@@ -21,9 +64,9 @@
             </ul>
         </nav>
         <div class="hero">
-            <h1>Gsiso AI Linux</h1>
-            <p class="tagline">Complete. Modern. User-Friendly.</p>
-            <p class="version">v1.0.0 ALPHA RELEASE</p>
+            <img src="assets/img/gsiso-ai-logo.jpg" alt="gsiso ai logo" class="hero-logo">
+            <h1>gsiso ai linux</h1>
+            <p class="tagline">Lightweight. Fast. Simple.</p>
             <div class="cta-buttons">
                 <a href="#download" class="btn btn-primary">Download Now</a>
                 <a href="#documentation" class="btn btn-secondary">Get Started</a>
@@ -33,22 +76,22 @@
 
     <main>
         <section id="features" class="features">
-            <h2>Why Choose Gsiso AI Linux?</h2>
+            <h2>why choose gsiso ai?</h2>
             <div class="feature-grid">
                 <div class="feature">
-                    <i class="fas fa-desktop"></i>
-                    <h3>Complete Desktop Environment</h3>
-                    <p>XFCE4 desktop with all essential applications included.</p>
+                    <i class="fas fa-bolt"></i>
+                    <h3>Lightweight</h3>
+                    <p>Designed to be fast and efficient, even on older hardware.</p>
                 </div>
                 <div class="feature">
-                    <i class="fas fa-download"></i>
-                    <h3>Real Bootable ISO</h3>
-                    <p>Actual installable Linux distribution based on Ubuntu 22.04 LTS.</p>
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure</h3>
+                    <p>Built with security in mind from the ground up.</p>
                 </div>
                 <div class="feature">
-                    <i class="fas fa-boxes"></i>
-                    <h3>Package Management</h3>
-                    <p>Custom package manager with 6 comprehensive packages.</p>
+                    <i class="fas fa-cogs"></i>
+                    <h3>Customizable</h3>
+                    <p>Tailor your system to your exact needs.</p>
                 </div>
                 <div class="feature">
                     <i class="fas fa-users"></i>
@@ -59,26 +102,27 @@
         </section>
 
         <section id="download" class="download">
-            <h2>Download Gsiso AI Linux</h2>
+            <h2>download gsiso ai</h2>
             <div class="download-options">
                 <div class="download-option">
-                    <h3>Latest Release</h3>
-                    <p>Version 1.0.0 ALPHA</p>
+                    <h3>Latest Stable Release</h3>
+                    <p>Version 1.0.0</p>
                     <a href="https://github.com/sisodiabhumca/gsiso-ai/actions" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download ISO</a>
                     <p class="note">Download from GitHub Actions</p>
                 </div>
                 <div class="download-option">
                     <h3>Development Builds</h3>
-                    <p>Latest features and improvements</p>
+                    <p>Bleeding edge features</p>
                     <a href="https://github.com/sisodiabhumca/gsiso-ai/actions" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">CI Builds</a>
                 </div>
             </div>
             <div class="requirements">
                 <h4>System Requirements</h4>
                 <ul>
-                    <li><strong>Minimum:</strong> x86_64 CPU, 2GB RAM, 10GB storage</li>
-                    <li><strong>Recommended:</strong> Multi-core CPU, 4GB+ RAM, 20GB+ storage</li>
-                    <li><strong>Graphics:</strong> Any VGA-compatible card</li>
+                    <li>CPU: x86_64 or ARMv7+</li>
+                    <li>RAM: 512MB minimum (1GB recommended)</li>
+                    <li>Storage: 5GB minimum</li>
+                    <li>Graphics: Any VGA-compatible card</li>
                 </ul>
             </div>
         </section>
@@ -88,15 +132,15 @@
             <div class="docs-grid">
                 <a href="https://github.com/sisodiabhumca/gsiso-ai/blob/main/wiki/installation-guide.md" class="doc-card" target="_blank" rel="noopener noreferrer">
                     <h3>Installation Guide</h3>
-                    <p>Step-by-step instructions for installing Gsiso AI Linux</p>
+                    <p>Step-by-step instructions for installing gsiso ai</p>
                 </a>
                 <a href="https://github.com/sisodiabhumca/gsiso-ai/blob/main/wiki/user-guide.md" class="doc-card" target="_blank" rel="noopener noreferrer">
                     <h3>User Guide</h3>
-                    <p>Learn how to use Gsiso AI Linux effectively</p>
+                    <p>Learn how to use gsiso ai effectively</p>
                 </a>
                 <a href="https://github.com/sisodiabhumca/gsiso-ai/blob/main/wiki/developer-guide.md" class="doc-card" target="_blank" rel="noopener noreferrer">
                     <h3>Developer Guide</h3>
-                    <p>Build and contribute to Gsiso AI Linux</p>
+                    <p>Build and contribute to gsiso ai</p>
                 </a>
                 <a href="https://github.com/sisodiabhumca/gsiso-ai/blob/main/wiki/faq.md" class="doc-card" target="_blank" rel="noopener noreferrer">
                     <h3>FAQ</h3>
@@ -107,7 +151,7 @@
 
         <section id="community" class="community">
             <h2>Join Our Community</h2>
-            <p>Gsiso AI Linux is made possible by a vibrant community of contributors. Join us!</p>
+            <p>gsiso ai is made possible by a vibrant community of contributors. join us!</p>
             <div class="community-links">
                 <a href="https://github.com/sisodiabhumca/gsiso-ai" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-github"></i> GitHub
@@ -123,36 +167,16 @@
                 </a>
             </div>
         </section>
-
-        <section id="features-detail" class="features-detail">
-            <h2>What's New in v1.0.0</h2>
-            <div class="features-list">
-                <div class="feature-item">
-                    <h3><i class="fas fa-desktop"></i> XFCE4 Desktop Environment</h3>
-                    <p>Complete desktop experience with Firefox, LibreOffice, VLC, GIMP, and more.</p>
-                </div>
-                <div class="feature-item">
-                    <h3><i class="fas fa-download"></i> Real Bootable ISO</h3>
-                    <p>Actual installable Linux distribution that can be installed on physical hardware.</p>
-                </div>
-                <div class="feature-item">
-                    <h3><i class="fas fa-boxes"></i> 6 Comprehensive Packages</h3>
-                    <p>Package manager, system updater, desktop environment, applications, and tools.</p>
-                </div>
-                <div class="feature-item">
-                    <h3><i class="fas fa-cogs"></i> Professional Installation</h3>
-                    <p>Graphical installer with multiple options and automatic user setup.</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Gsiso AI Linux</h4>
-                <p>Complete Linux Distribution</p>
-                <p>v1.0.0 ALPHA RELEASE</p>
+                <div class="logo">
+                    <img src="assets/img/gsiso-ai-logo.jpg" alt="gsiso ai logo" class="logo-img" style="height: 2rem;">
+                    <span class="logo-text" style="font-size: 1.2rem;">gsiso ai</span>
+                </div>
+                <p>Lightweight Linux Distribution</p>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
@@ -174,7 +198,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Gsiso AI Linux. All rights reserved.</p>
+            <p>&copy; 2025 gsiso ai. all rights reserved.</p>
         </div>
     </footer>
 </body>
