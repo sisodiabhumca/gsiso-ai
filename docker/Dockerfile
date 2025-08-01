@@ -37,19 +37,35 @@ RUN apt-get update && apt-get install -y \
     zstd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install BusyBox with better error handling and debugging
+# Install BusyBox with static build
 RUN set -ex \
     && cd /tmp \
+    # Install static build dependencies
+    && apt-get update \
+    && apt-get install -y gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf \
+    # Download and verify busybox
     && wget -q https://busybox.net/downloads/busybox-1.36.1.tar.bz2 \
-    && tar -xjf busybox-*.tar.bz2 \
-    && cd busybox-* \
+    && wget -q https://busybox.net/downloads/busybox-1.36.1.tar.bz2.sha256 \
+    && sha256sum -c busybox-1.36.1.tar.bz2.sha256 \
+    # Extract and build
+    && tar -xjf busybox-1.36.1.tar.bz2 \
+    && cd busybox-1.36.1 \
+    # Use static build configuration
     && make defconfig \
-    && make -j$(nproc) V=1 \
+    # Enable static build
+    && sed -i 's/^.*CONFIG_STATIC.*/CONFIG_STATIC=y/' .config \
+    # Build with verbose output and save logs
+    && make -j$(nproc) V=1 2>&1 | tee /tmp/busybox-build.log \
+    || { cat /tmp/busybox-build.log; exit 1; } \
+    # Install and verify
     && make install \
     && mkdir -p /bin \
     && cp ./busybox /bin/ \
+    && /bin/busybox --help \
+    # Clean up
     && cd /tmp \
-    && rm -rf busybox-*
+    && rm -rf busybox-1.36.1* \
+    && echo "BusyBox build and installation completed successfully"
 
 WORKDIR /workspace
 
