@@ -16,37 +16,52 @@ RUN ln -sf /bin/busybox /bin/sh \
     && ln -sf /bin/busybox /bin/bash \
     && /bin/busybox --install /bin
 
-# Install build dependencies in a separate layer
+# Update package lists
+RUN apt-get update
+
+# Install essential build tools first
+RUN apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install remaining build dependencies in groups
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bc \
     bison \
-    build-essential \
     cpio \
     curl \
     dosfstools \
     fakeroot \
-    file \
     flex \
-    g++ \
-    gcc \
-    genisoimage \
     git \
+    libc6-dev \
+    libelf-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install GRUB and ISO tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
     grub-efi-amd64-bin \
     grub-pc-bin \
     grub2-common \
-    libc6-dev \
-    libelf-dev \
+    genisoimage \
+    mtools \
+    xorriso \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install remaining utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
     liblz4-tool \
     libncurses5-dev \
-    libssl-dev \
-    make \
-    mtools \
     python3 \
     rsync \
     sudo \
     unzip \
     wget \
-    xorriso \
     xz-utils \
     zstd \
     && rm -rf /var/lib/apt/lists/*
