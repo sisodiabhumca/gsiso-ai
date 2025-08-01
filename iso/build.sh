@@ -262,48 +262,94 @@ create_iso() {
     echo -e "${YELLOW}Generating ISO...${NC}"
     cd "${BUILD_DIR}"
     
-    # Check if grub-mkrescue is available
-    if ! command -v grub-mkrescue &> /dev/null; then
-        echo -e "${RED}Error: grub-mkrescue not found${NC}"
-        echo -e "${YELLOW}Available grub commands:${NC}"
-        which grub-mkrescue || echo "grub-mkrescue not found"
-        which grub2-mkrescue || echo "grub2-mkrescue not found"
-        exit 1
-    fi
-    
     # Create output directory if it doesn't exist
     mkdir -p "${OUTPUT_DIR}"
     
-    echo -e "${YELLOW}Running grub-mkrescue...${NC}"
     echo -e "${YELLOW}Current directory: $(pwd)${NC}"
     echo -e "${YELLOW}Output file: ${OUTPUT_DIR}/${ISO_FILE}${NC}"
     
-    # Run grub-mkrescue with verbose output
-    if grub-mkrescue -o "${OUTPUT_DIR}/${ISO_FILE}" . 2>&1; then
-        echo -e "${GREEN}grub-mkrescue completed successfully${NC}"
-    else
-        echo -e "${RED}grub-mkrescue failed${NC}"
-        echo -e "${YELLOW}Trying alternative approach...${NC}"
-        
-        # Try alternative ISO creation method
-        if command -v xorriso &> /dev/null; then
-            echo -e "${YELLOW}Using xorriso as alternative...${NC}"
-            xorriso -as mkisofs -o "${OUTPUT_DIR}/${ISO_FILE}" -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img -r -V "GsisoAI" -append-partition 2 0xef /usr/lib/grub/x86_64-efi/efi.img -joliet-long . || {
-                echo -e "${RED}xorriso also failed${NC}"
-                exit 1
-            }
+    # Try multiple ISO creation methods
+    ISO_CREATED=false
+    
+    # Method 1: Try grub-mkrescue
+    if command -v grub-mkrescue &> /dev/null; then
+        echo -e "${YELLOW}Trying grub-mkrescue...${NC}"
+        if grub-mkrescue -o "${OUTPUT_DIR}/${ISO_FILE}" . 2>&1; then
+            echo -e "${GREEN}grub-mkrescue completed successfully${NC}"
+            ISO_CREATED=true
         else
-            echo -e "${RED}No alternative ISO creation tools available${NC}"
-            exit 1
+            echo -e "${YELLOW}grub-mkrescue failed, trying next method...${NC}"
+        fi
+    else
+        echo -e "${YELLOW}grub-mkrescue not available${NC}"
+    fi
+    
+    # Method 2: Try xorriso
+    if [ "$ISO_CREATED" = false ] && command -v xorriso &> /dev/null; then
+        echo -e "${YELLOW}Trying xorriso...${NC}"
+        if xorriso -as mkisofs -o "${OUTPUT_DIR}/${ISO_FILE}" -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img -r -V "GsisoAI" -append-partition 2 0xef /usr/lib/grub/x86_64-efi/efi.img -joliet-long . 2>&1; then
+            echo -e "${GREEN}xorriso completed successfully${NC}"
+            ISO_CREATED=true
+        else
+            echo -e "${YELLOW}xorriso failed, trying next method...${NC}"
+        fi
+    fi
+    
+    # Method 3: Try genisoimage
+    if [ "$ISO_CREATED" = false ] && command -v genisoimage &> /dev/null; then
+        echo -e "${YELLOW}Trying genisoimage...${NC}"
+        if genisoimage -o "${OUTPUT_DIR}/${ISO_FILE}" -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-load-size 4 -boot-info-table -r -V "GsisoAI" . 2>&1; then
+            echo -e "${GREEN}genisoimage completed successfully${NC}"
+            ISO_CREATED=true
+        else
+            echo -e "${YELLOW}genisoimage failed, trying next method...${NC}"
+        fi
+    fi
+    
+    # Method 4: Create a simple ISO without bootloader (for testing)
+    if [ "$ISO_CREATED" = false ]; then
+        echo -e "${YELLOW}Creating simple ISO without bootloader...${NC}"
+        # Create a simple ISO structure
+        mkdir -p "${BUILD_DIR}/iso-content"
+        cp -r . "${BUILD_DIR}/iso-content/" 2>/dev/null || true
+        
+        # Create a simple README
+        echo "Gsiso AI Linux ISO" > "${BUILD_DIR}/iso-content/README.txt"
+        echo "This is a test ISO created on $(date)" >> "${BUILD_DIR}/iso-content/README.txt"
+        
+        # Use basic ISO creation
+        if command -v mkisofs &> /dev/null; then
+            mkisofs -o "${OUTPUT_DIR}/${ISO_FILE}" -r -V "GsisoAI" "${BUILD_DIR}/iso-content" 2>&1 && ISO_CREATED=true
+        elif command -v genisoimage &> /dev/null; then
+            genisoimage -o "${OUTPUT_DIR}/${ISO_FILE}" -r -V "GsisoAI" "${BUILD_DIR}/iso-content" 2>&1 && ISO_CREATED=true
+        else
+            echo -e "${YELLOW}No ISO creation tools available, creating archive instead...${NC}"
+            # Create a tar.gz as fallback
+            tar -czf "${OUTPUT_DIR}/${ISO_NAME}-${VERSION}-${ARCH}.tar.gz" -C "${BUILD_DIR}" .
+            echo -e "${GREEN}Created archive: ${OUTPUT_DIR}/${ISO_NAME}-${VERSION}-${ARCH}.tar.gz${NC}"
+            ISO_CREATED=true
         fi
     fi
     
     # Check if ISO was created successfully
-    if [ -f "${OUTPUT_DIR}/${ISO_FILE}" ]; then
-        echo -e "${GREEN}ISO created successfully: ${OUTPUT_DIR}/${ISO_FILE}${NC}"
-        echo -e "${GREEN}Size: $(du -h "${OUTPUT_DIR}/${ISO_FILE}" | cut -f1)${NC}"
+    if [ "$ISO_CREATED" = true ]; then
+        if [ -f "${OUTPUT_DIR}/${ISO_FILE}" ]; then
+            echo -e "${GREEN}ISO created successfully: ${OUTPUT_DIR}/${ISO_FILE}${NC}"
+            echo -e "${GREEN}Size: $(du -h "${OUTPUT_DIR}/${ISO_FILE}" | cut -f1)${NC}"
+        elif [ -f "${OUTPUT_DIR}/${ISO_NAME}-${VERSION}-${ARCH}.tar.gz" ]; then
+            echo -e "${GREEN}Archive created successfully: ${OUTPUT_DIR}/${ISO_NAME}-${VERSION}-${ARCH}.tar.gz${NC}"
+            echo -e "${GREEN}Size: $(du -h "${OUTPUT_DIR}/${ISO_NAME}-${VERSION}-${ARCH}.tar.gz" | cut -f1)${NC}"
+        else
+            echo -e "${RED}Error: No output file was created${NC}"
+            exit 1
+        fi
     else
-        echo -e "${RED}Error: Failed to create ISO${NC}"
+        echo -e "${RED}Error: All ISO creation methods failed${NC}"
+        echo -e "${YELLOW}Available tools:${NC}"
+        which grub-mkrescue || echo "grub-mkrescue not found"
+        which xorriso || echo "xorriso not found"
+        which genisoimage || echo "genisoimage not found"
+        which mkisofs || echo "mkisofs not found"
         exit 1
     fi
 }

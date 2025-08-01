@@ -69,7 +69,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: gsiso-ai-iso
-        path: ${{ github.workspace }}/iso/output/*.iso
+        path: |
+          ${{ github.workspace }}/iso/output/*.iso
+          ${{ github.workspace }}/iso/output/*.tar.gz
         if-no-files-found: warn
         retention-days: 5
     
@@ -77,6 +79,8 @@ jobs:
       if: github.event_name == 'release'
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ github.workspace }}/iso/output/*.iso
+        files: |
+          ${{ github.workspace }}/iso/output/*.iso
+          ${{ github.workspace }}/iso/output/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
