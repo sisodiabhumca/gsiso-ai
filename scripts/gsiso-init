@@ -1,80 +1,216 @@
-#!/bin/sh
-# Gsiso AI Linux Init Script
-# This script is responsible for system initialization
+#!/bin/bash
 
-# Set the PATH
-PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+# Gsiso AI Linux System Initialization
+# This script initializes the system on first boot
 
-echo ""
-echo "  ____ ____  _     ___  _____   ___    _    _   _"
-echo " / ___/ ___|| |   / _ \\| ____| |_ _|  / \\  | \ | |"
-echo "| |  _\\___ \\| |  | | | |  _|    | |  / _ \\ |  \\| |"
-echo "| |_| |___) | |__| |_| | |___   | | / ___ \\| |\\  |"
-echo " \\____|____/|_____\\___/\_____| |___/_/   \\_\_| \\_|"
-echo ""
+VERSION="1.0.0"
+CONFIG_FILE="/etc/gsiso.conf"
+LOG_FILE="/var/log/gsiso-init.log"
 
-# Mount essential filesystems
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-mount -t devtmpfs udev /dev
-mount -t devpts devpts /dev/pts
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-# Create essential directories
-mkdir -p /run/udev
-mkdir -p /var/run/dbus
+# Log function
+log() {
+    local level=$1
+    local message=$2
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$timestamp] [$level] $message" | tee -a "$LOG_FILE"
+}
 
-# Set hostname
-hostname gsiso-ai
-
-echo "[\e[32mOK\e[0m] Mounted filesystems and set up basic system"
-
-# Start udev
-if [ -x /sbin/udevd ]; then
-    echo -n "Starting udev... "
-    /sbin/udevd --daemon
-    /sbin/udevadm trigger --action=add --type=subsystems
-    /sbin/udevadm trigger --action=add --type=devices
-    /sbin/udevadm settle
-    echo "[\e[32mOK\e[0m]"
+# Check if already initialized
+if [ -f "/var/lib/gsiso/initialized" ]; then
+    log "INFO" "System already initialized, skipping"
+    exit 0
 fi
 
-# Load kernel modules
-modprobe loop
-modprobe overlay
-modprobe squashfs
+log "INFO" "Starting Gsiso AI Linux system initialization"
 
-echo -n "Setting up loop devices... "
-for i in /sys/block/loop*; do
-    [ -e "$i" ] || continue
-    mknod -m 660 "${i#/sys/block/}" b 7 "${i#/sys/block/loop}"
-done
-echo "[\e[32mOK\e[0m]"
+# Create necessary directories
+mkdir -p /var/lib/gsiso /var/log/gsiso /etc/gsiso
 
-# Set up network (simplified)
-echo -n "Setting up network... "
-ip link set lo up
-ip link set eth0 up
-dhcpcd --quiet eth0 || true
-echo "[\e[32mOK\e[0m]"
-
-# Set up logging
-mkdir -p /var/log
-syslogd
-
-# Start essential services
-echo -n "Starting essential services... "
-crond
-sshd
-
-echo "[\e[32mOK\e[0m]"
-
-# Drop to a shell
-if [ -x /bin/bash ]; then
-    exec /bin/bash --login
+# Load configuration if exists
+if [ -f "$CONFIG_FILE" ]; then
+    log "INFO" "Loading configuration from $CONFIG_FILE"
+    source "$CONFIG_FILE"
 else
-    exec /bin/sh
+    log "WARNING" "Configuration file not found, using defaults"
 fi
 
-# This should never be reached
-echo "Init process ended. Something went wrong!"
-exec /bin/sh
+# Set system hostname
+if [ -n "$HOSTNAME" ]; then
+    log "INFO" "Setting hostname to $HOSTNAME"
+    hostnamectl set-hostname "$HOSTNAME"
+else
+    log "INFO" "Setting default hostname: gsiso-ai"
+    hostnamectl set-hostname "gsiso-ai"
+fi
+
+# Configure network
+configure_network() {
+    log "INFO" "Configuring network"
+    
+    # Enable network interfaces
+    for interface in /sys/class/net/*; do
+        if [ -d "$interface" ] && [ "$(basename "$interface")" != "lo" ]; then
+            local ifname=$(basename "$interface")
+            log "INFO" "Enabling interface: $ifname"
+            ip link set "$ifname" up
+        fi
+    done
+    
+    # Start network services
+    if command -v systemctl &> /dev/null; then
+        systemctl enable systemd-networkd
+        systemctl start systemd-networkd
+        systemctl enable systemd-resolved
+        systemctl start systemd-resolved
+    fi
+}
+
+# Configure users and security
+configure_users() {
+    log "INFO" "Configuring users and security"
+    
+    # Create gsiso user if not exists
+    if ! id "gsiso" &>/dev/null; then
+        log "INFO" "Creating gsiso user"
+        useradd -m -s /bin/bash gsiso
+        echo "gsiso:gsiso" | chpasswd
+        usermod -aG sudo gsiso
+    fi
+    
+    # Configure sudo
+    if [ ! -f "/etc/sudoers.d/gsiso" ]; then
+        log "INFO" "Configuring sudo for gsiso user"
+        echo "gsiso ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/gsiso
+        chmod 440 /etc/sudoers.d/gsiso
+    fi
+    
+    # Set root password if not set
+    if ! passwd -S root | grep -q "P"; then
+        log "INFO" "Setting root password"
+        echo "root:root" | chpasswd
+    fi
+}
+
+# Configure services
+configure_services() {
+    log "INFO" "Configuring system services"
+    
+    if command -v systemctl &> /dev/null; then
+        # Enable essential services
+        local services=("ssh" "cron" "rsyslog" "systemd-networkd" "systemd-resolved")
+        
+        for service in "${services[@]}"; do
+            if systemctl list-unit-files | grep -q "$service"; then
+                log "INFO" "Enabling service: $service"
+                systemctl enable "$service"
+                systemctl start "$service"
+            fi
+        done
+    fi
+}
+
+# Configure package management
+configure_package_management() {
+    log "INFO" "Configuring package management"
+    
+    # Initialize gs-pkg if available
+    if command -v gs-pkg &> /dev/null; then
+        log "INFO" "Initializing gs-pkg"
+        gs-pkg update || log "WARNING" "Failed to update gs-pkg database"
+    fi
+    
+    # Update system packages
+    if command -v apt-get &> /dev/null; then
+        log "INFO" "Updating system packages"
+        apt-get update
+        apt-get upgrade -y
+    fi
+}
+
+# Configure system settings
+configure_system_settings() {
+    log "INFO" "Configuring system settings"
+    
+    # Set timezone
+    if [ -n "$TIMEZONE" ]; then
+        timedatectl set-timezone "$TIMEZONE"
+    else
+        timedatectl set-timezone "UTC"
+    fi
+    
+    # Configure locale
+    if [ -n "$LANG" ]; then
+        localectl set-locale "$LANG"
+    fi
+    
+    # Configure keyboard
+    if [ -n "$KEYMAP" ]; then
+        localectl set-keymap "$KEYMAP"
+    fi
+}
+
+# Create system information
+create_system_info() {
+    log "INFO" "Creating system information"
+    
+    # Create version file
+    cat > /etc/gsiso-release << EOF
+Gsiso AI Linux $VERSION
+Codename: Stable
+Architecture: $(uname -m)
+Kernel: $(uname -r)
+Build Date: $(date)
+EOF
+    
+    # Create motd
+    cat > /etc/motd << 'EOF'
+Welcome to Gsiso AI Linux!
+
+This is a lightweight, fast, and user-friendly Linux distribution.
+For support and documentation, visit: https://github.com/sisodiabhumca/gsiso-ai
+
+Default login credentials:
+- Username: gsiso
+- Password: gsiso
+- Root password: root
+
+EOF
+}
+
+# Main initialization
+main() {
+    log "INFO" "Starting Gsiso AI Linux initialization v$VERSION"
+    
+    configure_network
+    configure_users
+    configure_services
+    configure_package_management
+    configure_system_settings
+    create_system_info
+    
+    # Mark as initialized
+    mkdir -p /var/lib/gsiso
+    echo "$(date)" > /var/lib/gsiso/initialized
+    echo "$VERSION" > /var/lib/gsiso/version
+    
+    log "INFO" "System initialization completed successfully"
+    
+    echo -e "${GREEN}"
+    echo "========================================"
+    echo "  Gsiso AI Linux Initialization Complete"
+    echo "========================================"
+    echo "  Default login: gsiso / gsiso"
+    echo "  Root password: root"
+    echo "  SSH enabled: yes"
+    echo "========================================"
+    echo -e "${NC}"
+}
+
+# Run main function
+main "$@"

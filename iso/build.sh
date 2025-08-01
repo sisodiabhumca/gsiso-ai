@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Exit on error and trace
+# Gsiso AI Linux ISO Builder - Main Script
+# This script orchestrates the complete ISO building process
+
 set -e
 
 # Load configuration
@@ -31,6 +33,68 @@ check_root() {
         echo -e "${RED}Error: This script must be run as root${NC}"
         exit 1
     fi
+}
+
+# Check build mode
+check_build_mode() {
+    echo -e "${YELLOW}Checking build mode...${NC}"
+    
+    # Check if we have the real build script
+    if [ -f "${SCRIPT_DIR}/build_real.sh" ]; then
+        echo -e "${GREEN}Real bootable ISO builder found${NC}"
+        return 0
+    else
+        echo -e "${YELLOW}Using minimal ISO builder (development mode)${NC}"
+        return 1
+    fi
+}
+
+# Build packages first
+build_packages() {
+    echo -e "${YELLOW}Building packages...${NC}"
+    
+    if [ -f "${SCRIPT_DIR}/../scripts/create-packages.sh" ]; then
+        echo -e "${YELLOW}Running package builder...${NC}"
+        "${SCRIPT_DIR}/../scripts/create-packages.sh"
+        echo -e "${GREEN}Packages built successfully${NC}"
+    else
+        echo -e "${YELLOW}Package builder not found, skipping${NC}"
+    fi
+}
+
+# Build real bootable ISO
+build_real_iso() {
+    echo -e "${YELLOW}Building real bootable ISO...${NC}"
+    
+    # Make the real build script executable
+    chmod +x "${SCRIPT_DIR}/build_real.sh"
+    
+    # Run the real ISO builder
+    "${SCRIPT_DIR}/build_real.sh"
+    
+    echo -e "${GREEN}Real bootable ISO created successfully${NC}"
+}
+
+# Build minimal ISO (fallback)
+build_minimal_iso() {
+    echo -e "${YELLOW}Building minimal ISO (development mode)...${NC}"
+    
+    # Install required packages
+    install_dependencies
+    
+    # Create directory structure
+    setup_directories
+    
+    # Copy essential binaries and libraries
+    copy_essentials
+    
+    # Create init script
+    create_init_script
+    
+    # Create ISO image
+    create_iso
+    
+    echo -e "${GREEN}Minimal ISO created successfully${NC}"
 }
 
 # Install required packages
@@ -165,27 +229,6 @@ poweroff -f
 EOF
 
     chmod +x "${ISO_DIR}/init"
-}
-
-# Create GRUB configuration
-create_grub_config() {
-    echo -e "${YELLOW}Creating GRUB configuration...${NC}"
-    mkdir -p "${BUILD_DIR}/boot/grub"
-    
-    cat > "${BUILD_DIR}/boot/grub/grub.cfg" << 'EOF'
-set timeout=10
-set default=0
-
-menuentry "Gsiso AI Linux" {
-    linux /boot/bzImage root=/dev/ram0 rw init=/init console=tty0 console=ttyS0,115200n8
-    initrd /boot/initrd.img
-}
-
-menuentry "Gsiso AI Linux (Safe Mode)" {
-    linux /boot/bzImage root=/dev/ram0 rw init=/init single
-    initrd /boot/initrd.img
-}
-EOF
 }
 
 # Create ISO image
@@ -334,18 +377,49 @@ create_iso() {
     fi
 }
 
+# Create GRUB configuration
+create_grub_config() {
+    echo -e "${YELLOW}Creating GRUB configuration...${NC}"
+    mkdir -p "${BUILD_DIR}/boot/grub"
+    
+    cat > "${BUILD_DIR}/boot/grub/grub.cfg" << 'EOF'
+set timeout=10
+set default=0
+
+menuentry "Gsiso AI Linux" {
+    linux /boot/bzImage root=/dev/ram0 rw init=/init console=tty0 console=ttyS0,115200n8
+    initrd /boot/initrd.img
+}
+
+menuentry "Gsiso AI Linux (Safe Mode)" {
+    linux /boot/bzImage root=/dev/ram0 rw init=/init single
+    initrd /boot/initrd.img
+}
+EOF
+}
+
 # Main function
 main() {
     print_header
     check_root
-    install_dependencies
-    setup_directories
-    copy_essentials
-    create_init_script
-    create_iso
     
-    echo -e "${GREEN}Gsiso AI ISO build completed successfully!${NC}"
-    echo -e "${GREEN}ISO location: ${OUTPUT_DIR}/${ISO_FILE}${NC}"
+    # Build packages first
+    build_packages
+    
+    # Check build mode and proceed accordingly
+    if check_build_mode; then
+        echo -e "${GREEN}Building real bootable ISO...${NC}"
+        build_real_iso
+    else
+        echo -e "${YELLOW}Building minimal ISO (development mode)...${NC}"
+        build_minimal_iso
+    fi
+    
+    echo -e "${GREEN}"
+    echo "========================================"
+    echo "  Gsiso AI ISO build completed!"
+    echo "========================================"
+    echo -e "${NC}"
 }
 
 # Run main function

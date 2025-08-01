@@ -8,26 +8,26 @@
   [![Build Status](https://github.com/sisodiabhumca/gsiso-ai/workflows/Build%20ISO/badge.svg)](https://github.com/sisodiabhumca/gsiso-ai/actions)
 </div>
 
-## ⚠️ **Development Status**
+## 🚀 **Development Status - ALPHA RELEASE**
 
-**gsiso ai is currently in active development and is NOT ready for production use.**
+**Gsiso AI Linux now includes real bootable ISO creation capabilities!**
 
-This is a proof-of-concept Linux distribution that demonstrates the basic structure and tooling for a lightweight Linux system. The current version includes:
+This project has evolved from a framework to a functional Linux distribution with:
 
-- ✅ **Project structure and documentation**
-- ✅ **Package management framework**
-- ✅ **CI/CD pipeline for ISO building**
-- ✅ **Basic system scripts and configuration**
-- ⚠️ **Minimal bootable ISO (development only)**
-- ❌ **Full Linux distribution (not yet implemented)**
+- ✅ **Real Bootable ISO**: Creates actual bootable Linux systems
+- ✅ **Complete Package Management**: Functional package repository and manager
+- ✅ **System Initialization**: Proper system setup and configuration
+- ✅ **CI/CD Pipeline**: Automated building and testing
+- ✅ **Documentation**: Comprehensive guides and documentation
 
 ## Features
 
-- **Lightweight**: Designed for minimal resource usage
-- **Modular**: Add or remove components as needed
+- **Real Linux Distribution**: Based on Ubuntu with custom components
+- **Bootable ISO**: Creates actual installable Linux systems
+- **Package Management**: `gs-pkg` with real package repository
+- **System Tools**: Custom initialization and update scripts
+- **Modular Design**: Add or remove components as needed
 - **Open Source**: Fully transparent and community-driven
-- **Custom Package Manager**: `gs-pkg` for software management
-- **CI/CD Pipeline**: Automated ISO building and testing
 
 ## System Requirements
 
@@ -39,10 +39,22 @@ This is a proof-of-concept Linux distribution that demonstrates the basic struct
 
 ## Quick Start
 
+### For Users
+
+**Download and Test:**
+1. **Get the ISO**: Download from [GitHub Actions](https://github.com/sisodiabhumca/gsiso-ai/actions)
+2. **Test in VM**: Use VirtualBox or VMware for testing
+3. **Create Bootable USB**: Use Etcher or dd command
+4. **Install**: Follow the installation wizard
+
+**Default Credentials:**
+- Username: `gsiso`
+- Password: `gsiso`
+- Root Password: `root`
+
 ### For Developers
 
-If you want to contribute or experiment:
-
+**Build from Source:**
 ```bash
 # Clone the repository
 git clone https://github.com/sisodiabhumca/gsiso-ai.git
@@ -51,25 +63,34 @@ cd gsiso-ai
 # Test the Docker build
 ./test-docker-build.sh
 
-# Build the ISO (requires Docker)
+# Build the real bootable ISO (requires Docker)
 ./iso/build.sh
 ```
 
-### For Users
+**Package Development:**
+```bash
+# Build packages
+sudo ./scripts/create-packages.sh
 
-**Note**: The current ISO is a minimal development build and not suitable for daily use.
-
-1. **Download**: Get the latest build from [GitHub Actions](https://github.com/sisodiabhumca/gsiso-ai/actions)
-2. **Test**: Use in a virtual machine for testing
-3. **Report Issues**: Help improve the project by reporting bugs
+# Test package manager
+sudo ./scripts/gs-pkg install gs-pkg
+```
 
 ## Project Structure
 
 ```
 gsiso-ai/
-├── iso/              # ISO building scripts and configuration
-├── scripts/          # System scripts (gs-pkg, gs-update, etc.)
-├── packages/         # Package definitions and lists
+├── iso/              # ISO building scripts (real + minimal)
+│   ├── build.sh      # Main build orchestrator
+│   ├── build_real.sh # Real bootable ISO builder
+│   └── build_config  # Build configuration
+├── scripts/          # System scripts and tools
+│   ├── gs-pkg        # Package manager
+│   ├── gs-update     # System updater
+│   ├── gsiso-init    # System initializer
+│   └── create-packages.sh # Package builder
+├── packages/         # Package definitions
+├── repo/             # Package repository (generated)
 ├── docs/             # Documentation and website
 ├── wiki/             # Wiki pages
 ├── etc/              # System configuration files
@@ -77,23 +98,44 @@ gsiso-ai/
 └── .github/          # GitHub Actions workflows
 ```
 
+## What's New
+
+### **Real Bootable ISO Creation**
+- Creates actual Ubuntu-based Linux systems
+- Includes real kernel, init system, and filesystem
+- Bootable with GRUB bootloader
+- Supports both UEFI and legacy BIOS
+
+### **Functional Package Management**
+- Real package repository with actual packages
+- `gs-pkg` package manager with dependency handling
+- Package building and distribution system
+- Local and remote repository support
+
+### **System Initialization**
+- Proper system setup on first boot
+- User creation and configuration
+- Network and service configuration
+- Security and access control
+
 ## Documentation
 
 - **User Guide**: [Wiki](https://github.com/sisodiabhumca/gsiso-ai/wiki)
 - **Installation**: [INSTALL.md](INSTALL.md)
 - **Development**: [DOCUMENTATION.md](DOCUMENTATION.md)
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
+- **Release Status**: [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)
 
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 **Areas that need help:**
-- Kernel configuration and optimization
-- Package repository setup
-- System initialization improvements
-- Documentation and testing
-- User interface development
+- Desktop environment integration
+- Application ecosystem expansion
+- Testing and quality assurance
+- Documentation improvements
+- Performance optimization
 
 ## Roadmap
 
@@ -103,16 +145,16 @@ We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) 
 - [x] Package management framework
 - [x] CI/CD pipeline
 
-### Phase 2: Core System (In Progress)
-- [ ] Bootable ISO with real kernel
-- [ ] Basic filesystem and init system
-- [ ] Package repository
-- [ ] System configuration tools
+### Phase 2: Core System ✅
+- [x] Bootable ISO with real kernel
+- [x] Basic filesystem and init system
+- [x] Package repository
+- [x] System configuration tools
 
-### Phase 3: User Experience
-- [ ] Installation wizard
-- [ ] Desktop environment
+### Phase 3: User Experience (In Progress)
+- [ ] Desktop environment integration
 - [ ] Application ecosystem
+- [ ] Installation wizard improvements
 - [ ] User documentation
 
 ### Phase 4: Production Ready
@@ -128,6 +170,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ## Acknowledgments
 
 - Linux Kernel Team
+- Ubuntu Project for base system
 - All open-source contributors and maintainers
 - The Linux community for inspiration and tools
 

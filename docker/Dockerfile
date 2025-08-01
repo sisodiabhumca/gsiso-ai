@@ -90,6 +90,12 @@ RUN . /usr/local/bin/retry-apt && retry apt-get update && retry apt-get install 
     zstd \
     && rm -rf /var/lib/apt/lists/*
 
+# Install real ISO building dependencies
+RUN . /usr/local/bin/retry-apt && retry apt-get update && retry apt-get install -y --no-install-recommends \
+    debootstrap \
+    squashfs-tools \
+    && rm -rf /var/lib/apt/lists/*
+
 # Clean up
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -98,9 +104,11 @@ WORKDIR /workspace
 
 # Copy build scripts
 COPY iso/ /workspace/iso/
+COPY scripts/ /workspace/scripts/
+COPY etc/ /workspace/etc/
 
 # Set execute permissions
-RUN chmod +x /workspace/iso/build.sh
+RUN chmod +x /workspace/iso/build.sh /workspace/iso/build_real.sh /workspace/scripts/*.sh
 
 # Set the entry point
 ENTRYPOINT ["/bin/bash"]
