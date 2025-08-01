@@ -30,7 +30,13 @@ jobs:
     - name: Build ISO
       run: |
         mkdir -p ${{ github.workspace }}/artifacts
-        docker run --rm -v ${{ github.workspace }}:/workspace gsiso-builder /bin/bash -c "cd /workspace/iso && ./build.sh"
+        docker run --rm \
+          --platform linux/amd64 \
+          -v ${{ github.workspace }}:/workspace \
+          -w /workspace/iso \
+          --entrypoint /bin/sh \
+          gsiso-builder \
+          -c "./build.sh"
         
     - name: Upload ISO artifact
       uses: actions/upload-artifact@v4

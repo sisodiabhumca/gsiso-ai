@@ -1,9 +1,23 @@
 FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    SHELL=/bin/bash
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y \
+# Install base dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
+    busybox-static \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up the shell
+RUN ln -sf /bin/busybox /bin/sh \
+    && ln -sf /bin/busybox /bin/bash \
+    && /bin/busybox --install /bin
+
+# Install build dependencies in a separate layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
     bc \
     bison \
     build-essential \
@@ -36,15 +50,6 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     zstd \
     && rm -rf /var/lib/apt/lists/*
-
-# Install BusyBox using package manager
-RUN set -ex \
-    && apt-get update \
-    && apt-get install -y busybox-static \
-    && mkdir -p /bin \
-    && ln -sf /bin/busybox /bin/sh \
-    && /bin/busybox --help \
-    && echo "BusyBox installation completed successfully"
 
 WORKDIR /workspace
 
