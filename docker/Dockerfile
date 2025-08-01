@@ -4,43 +4,52 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
+    bc \
+    bison \
     build-essential \
-    grub2-common \
-    grub-pc-bin \
-    grub-efi-amd64-bin \
-    mtools \
-    xorriso \
-    squashfs-tools \
-    wget \
     cpio \
-    genisoimage \
-    git \
-    file \
+    curl \
     dosfstools \
     fakeroot \
+    file \
+    flex \
+    g++ \
     gcc \
+    genisoimage \
+    git \
+    grub-efi-amd64-bin \
+    grub-pc-bin \
+    grub2-common \
     libc6-dev \
+    libelf-dev \
     liblz4-tool \
+    libncurses5-dev \
+    libssl-dev \
     make \
+    mtools \
     python3 \
     rsync \
     sudo \
     unzip \
     wget \
+    xorriso \
     xz-utils \
     zstd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install BusyBox
-RUN wget https://busybox.net/downloads/busybox-1.36.1.tar.bz2 \
+# Install BusyBox with better error handling and debugging
+RUN set -ex \
+    && cd /tmp \
+    && wget -q https://busybox.net/downloads/busybox-1.36.1.tar.bz2 \
     && tar -xjf busybox-*.tar.bz2 \
     && cd busybox-* \
     && make defconfig \
-    && make -j$(nproc) \
+    && make -j$(nproc) V=1 \
     && make install \
-    && cd .. \
-    && rm -rf busybox-* \
-    && cp /bin/busybox /bin/busybox
+    && mkdir -p /bin \
+    && cp ./busybox /bin/ \
+    && cd /tmp \
+    && rm -rf busybox-*
 
 WORKDIR /workspace
 
