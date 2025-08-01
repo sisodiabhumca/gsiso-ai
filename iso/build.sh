@@ -13,6 +13,26 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Retry function for package installation
+retry_install() {
+    local max_attempts=3
+    local delay=5
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        echo -e "${YELLOW}Attempt $attempt of $max_attempts to install packages...${NC}"
+        if "$@"; then
+            return 0
+        fi
+        echo -e "${YELLOW}Package installation failed. Retrying in $delay seconds...${NC}"
+        sleep $delay
+        attempt=$((attempt + 1))
+        delay=$((delay * 2))
+    done
+    echo -e "${RED}Package installation failed after $max_attempts attempts${NC}"
+    return 1
+}
+
 # Print header
 print_header() {
     echo -e "${GREEN}"
@@ -36,15 +56,26 @@ check_root() {
 # Install required packages
 install_dependencies() {
     echo -e "${YELLOW}Installing required packages...${NC}"
+    
+    # Check if we're in a container environment
+    if [ -f /.dockerenv ]; then
+        echo -e "${YELLOW}Detected Docker environment, skipping package installation${NC}"
+        return 0
+    fi
+    
     if command -v apt-get &> /dev/null; then
-        apt-get update
-        apt-get install -y ${REQUIRED_PACKAGES}
+        echo -e "${YELLOW}Using apt-get package manager${NC}"
+        retry_install apt-get update
+        retry_install apt-get install -y ${REQUIRED_PACKAGES}
     elif command -v dnf &> /dev/null; then
-        dnf install -y ${REQUIRED_PACKAGES}
+        echo -e "${YELLOW}Using dnf package manager${NC}"
+        retry_install dnf install -y ${REQUIRED_PACKAGES}
     elif command -v yum &> /dev/null; then
-        yum install -y ${REQUIRED_PACKAGES}
+        echo -e "${YELLOW}Using yum package manager${NC}"
+        retry_install yum install -y ${REQUIRED_PACKAGES}
     else
         echo -e "${YELLOW}Warning: Could not determine package manager. Please install required packages manually.${NC}"
+        echo -e "${YELLOW}Required packages: ${REQUIRED_PACKAGES}${NC}"
     fi
 }
 
@@ -92,12 +123,14 @@ copy_essentials() {
     # Function to copy dependencies
     copy_deps() {
         local bin=$1
-        ldd "$bin" | grep "=>" | awk '{print $3}' | while read -r lib; do
-            if [ -f "$lib" ] && [ ! -f "${ISO_DIR}${lib}" ]; then
-                mkdir -p "${ISO_DIR}$(dirname "$lib")"
-                cp "$lib" "${ISO_DIR}${lib}"
-            fi
-        done
+        if [ -f "$bin" ]; then
+            ldd "$bin" 2>/dev/null | grep "=>" | awk '{print $3}' | while read -r lib; do
+                if [ -f "$lib" ] && [ ! -f "${ISO_DIR}${lib}" ]; then
+                    mkdir -p "${ISO_DIR}$(dirname "$lib")"
+                    cp "$lib" "${ISO_DIR}${lib}"
+                fi
+            done
+        fi
     }
     
     # Copy dependencies for busybox
@@ -187,7 +220,22 @@ create_iso() {
     # Copy kernel
     echo -e "${YELLOW}Copying kernel...${NC}"
     mkdir -p "${BUILD_DIR}/boot"
-    cp "${KERNEL_IMAGE}" "${BUILD_DIR}/boot/bzImage"
+    
+    # Try to find kernel image
+    if [ -f "${KERNEL_IMAGE}" ]; then
+        cp "${KERNEL_IMAGE}" "${BUILD_DIR}/boot/bzImage"
+    else
+        echo -e "${YELLOW}Warning: Kernel image not found at ${KERNEL_IMAGE}${NC}"
+        echo -e "${YELLOW}Trying to find kernel in /boot...${NC}"
+        KERNEL_FOUND=$(find /boot -name "vmlinuz*" -o -name "bzImage" | head -1)
+        if [ -n "${KERNEL_FOUND}" ]; then
+            echo -e "${YELLOW}Found kernel: ${KERNEL_FOUND}${NC}"
+            cp "${KERNEL_FOUND}" "${BUILD_DIR}/boot/bzImage"
+        else
+            echo -e "${RED}Error: No kernel image found${NC}"
+            exit 1
+        fi
+    fi
     
     # Create GRUB configuration
     create_grub_config
@@ -196,7 +244,12 @@ create_iso() {
     echo -e "${YELLOW}Generating ISO...${NC}"
     cd "${BUILD_DIR}"
     
-    grub-mkrescue -o "${OUTPUT_DIR}/${ISO_FILE}" .
+    if command -v grub-mkrescue &> /dev/null; then
+        grub-mkrescue -o "${OUTPUT_DIR}/${ISO_FILE}" .
+    else
+        echo -e "${RED}Error: grub-mkrescue not found${NC}"
+        exit 1
+    fi
     
     # Check if ISO was created successfully
     if [ -f "${OUTPUT_DIR}/${ISO_FILE}" ]; then
