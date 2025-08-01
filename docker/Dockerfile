@@ -50,13 +50,16 @@ RUN apt-get clean && \
 
 WORKDIR /workspace
 
-# Copy build scripts (with error handling)
-COPY iso/ /workspace/iso/ || echo "Warning: iso/ directory not found"
-COPY scripts/ /workspace/scripts/ || echo "Warning: scripts/ directory not found"
-COPY etc/ /workspace/etc/ || echo "Warning: etc/ directory not found"
+# Create directories first
+RUN mkdir -p /workspace/iso /workspace/scripts /workspace/etc
 
-# Set execute permissions (with error handling)
-RUN chmod +x /workspace/iso/build.sh /workspace/iso/build_real.sh /workspace/scripts/*.sh 2>/dev/null || echo "Warning: Some files not found for chmod"
+# Copy build scripts (simple COPY commands)
+COPY iso/ /workspace/iso/
+COPY scripts/ /workspace/scripts/
+COPY etc/ /workspace/etc/
+
+# Set execute permissions
+RUN chmod +x /workspace/iso/build.sh /workspace/iso/build_real.sh /workspace/iso/build_fallback.sh /workspace/scripts/*.sh
 
 # Set the entry point
 ENTRYPOINT ["/bin/bash"]

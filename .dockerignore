@@ -1,0 +1,33 @@
+# Git files
+.git/
+.gitignore
+
+# Documentation
+README.md
+INSTALL.md
+DOCUMENTATION.md
+CONTRIBUTING.md
+LICENSE
+
+# Build artifacts
+build/
+output/
+*.iso
+*.tar.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/ 
