@@ -10,8 +10,8 @@ ISO_FILE="${ISO_NAME}-${VERSION}-${ARCH}.iso"
 # Packages to include in the ISO
 PACKAGES="busybox bash coreutils util-linux kmod udev e2fsprogs"
 
-# Kernel configuration (using host kernel for now)
-KERNEL_IMAGE="/boot/vmlinuz-$(uname -r)"
+# Kernel configuration - try multiple paths
+KERNEL_PATHS="/boot/vmlinuz-$(uname -r) /boot/vmlinuz /boot/bzImage /vmlinuz"
 
 # Bootloader configuration
 GRUB_CFG="${BUILD_DIR}/isolinux/grub.cfg"
