@@ -67,6 +67,16 @@ jobs:
         find ${{ github.workspace }}/iso/ -name "*.iso" -type f || echo "No ISO files found"
         find ${{ github.workspace }}/iso/ -name "*.tar.gz" -type f || echo "No archive files found"
         
+        # Check if ISO was created in the expected location
+        if [ -f "${{ github.workspace }}/iso/output/gsiso-ai-1.0.0-x86_64.iso" ]; then
+          echo "✅ ISO found in expected location"
+        else
+          echo "❌ ISO not found in expected location"
+          echo "Searching for ISO files in workspace..."
+          find ${{ github.workspace }} -name "*.iso" -type f || echo "No ISO files found anywhere"
+          exit 1
+        fi
+        
     - name: Validate ISO
       run: |
         echo "Validating ISO file..."
@@ -80,9 +90,18 @@ jobs:
             echo "✅ ISO validation passed - Valid ISO 9660 format"
           else
             echo "⚠️ ISO validation warning - Not standard ISO format"
+            echo "File type: $(file "$ISO_FILE")"
           fi
+          
+          # Additional validation
+          echo "ISO file details:"
+          ls -la "$ISO_FILE"
         else
           echo "❌ No ISO file found"
+          echo "Contents of output directory:"
+          ls -la ${{ github.workspace }}/iso/output/ || echo "Output directory not found"
+          echo "Searching for any ISO files in workspace:"
+          find ${{ github.workspace }} -name "*.iso" -type f || echo "No ISO files found anywhere"
           exit 1
         fi
         

@@ -72,6 +72,23 @@ build_real_iso() {
     # Run the real ISO builder
     "${SCRIPT_DIR}/build_real.sh"
     
+    # Copy ISO to the expected location for GitHub Actions
+    if [ -f "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" ]; then
+        echo -e "${YELLOW}Copying ISO to expected location...${NC}"
+        mkdir -p "${SCRIPT_DIR}/output"
+        cp "${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso" "${SCRIPT_DIR}/output/"
+        echo -e "${GREEN}ISO copied to: ${SCRIPT_DIR}/output/gsiso-ai-1.0.0-x86_64.iso${NC}"
+        
+        # List files in output directory
+        echo -e "${YELLOW}Files in output directory:${NC}"
+        ls -la "${SCRIPT_DIR}/output/"
+    else
+        echo -e "${RED}Error: ISO file not found in expected location${NC}"
+        echo -e "${YELLOW}Searching for ISO files...${NC}"
+        find "${SCRIPT_DIR}" -name "*.iso" -type f 2>/dev/null || echo "No ISO files found"
+        exit 1
+    fi
+    
     echo -e "${GREEN}Real bootable ISO created successfully${NC}"
 }
 

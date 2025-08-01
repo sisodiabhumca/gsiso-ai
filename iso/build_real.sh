@@ -14,6 +14,9 @@ ROOTFS_DIR="${BUILD_DIR}/rootfs"
 ISO_DIR="${BUILD_DIR}/iso"
 OUTPUT_DIR="$(pwd)/output"
 
+# Ensure output directory exists
+mkdir -p "${OUTPUT_DIR}"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -26,6 +29,7 @@ print_header() {
     echo "  Gsiso AI Linux - Real ISO Builder"
     echo "  Version: ${VERSION}"
     echo "  Architecture: ${ARCH}"
+    echo "  Output Directory: ${OUTPUT_DIR}"
     echo "========================================"
     echo -e "${NC}"
 }
@@ -293,8 +297,20 @@ create_bootable_iso() {
     # Create ISO with GRUB
     grub-mkrescue -o "${OUTPUT_DIR}/${ISO_NAME}.iso" "${ISO_DIR}"
     
-    echo -e "${GREEN}Bootable ISO created: ${OUTPUT_DIR}/${ISO_NAME}.iso${NC}"
-    echo -e "${GREEN}Size: $(du -h "${OUTPUT_DIR}/${ISO_NAME}.iso" | cut -f1)${NC}"
+    # Verify ISO was created
+    if [ -f "${OUTPUT_DIR}/${ISO_NAME}.iso" ]; then
+        echo -e "${GREEN}Bootable ISO created: ${OUTPUT_DIR}/${ISO_NAME}.iso${NC}"
+        echo -e "${GREEN}Size: $(du -h "${OUTPUT_DIR}/${ISO_NAME}.iso" | cut -f1)${NC}"
+        
+        # List all files in output directory
+        echo -e "${YELLOW}Files in output directory:${NC}"
+        ls -la "${OUTPUT_DIR}/"
+    else
+        echo -e "${RED}Error: ISO file was not created${NC}"
+        echo -e "${YELLOW}Contents of output directory:${NC}"
+        ls -la "${OUTPUT_DIR}/" || echo "Output directory is empty or doesn't exist"
+        exit 1
+    fi
 }
 
 # Main build process
