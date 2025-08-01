@@ -13,26 +13,6 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Retry function for package installation
-retry_install() {
-    local max_attempts=3
-    local delay=5
-    local attempt=1
-    
-    while [ $attempt -le $max_attempts ]; do
-        echo -e "${YELLOW}Attempt $attempt of $max_attempts to install packages...${NC}"
-        if "$@"; then
-            return 0
-        fi
-        echo -e "${YELLOW}Package installation failed. Retrying in $delay seconds...${NC}"
-        sleep $delay
-        attempt=$((attempt + 1))
-        delay=$((delay * 2))
-    done
-    echo -e "${RED}Package installation failed after $max_attempts attempts${NC}"
-    return 1
-}
-
 # Print header
 print_header() {
     echo -e "${GREEN}"
@@ -65,14 +45,14 @@ install_dependencies() {
     
     if command -v apt-get &> /dev/null; then
         echo -e "${YELLOW}Using apt-get package manager${NC}"
-        retry_install apt-get update
-        retry_install apt-get install -y ${REQUIRED_PACKAGES}
+        apt-get update
+        apt-get install -y ${REQUIRED_PACKAGES}
     elif command -v dnf &> /dev/null; then
         echo -e "${YELLOW}Using dnf package manager${NC}"
-        retry_install dnf install -y ${REQUIRED_PACKAGES}
+        dnf install -y ${REQUIRED_PACKAGES}
     elif command -v yum &> /dev/null; then
         echo -e "${YELLOW}Using yum package manager${NC}"
-        retry_install yum install -y ${REQUIRED_PACKAGES}
+        yum install -y ${REQUIRED_PACKAGES}
     else
         echo -e "${YELLOW}Warning: Could not determine package manager. Please install required packages manually.${NC}"
         echo -e "${YELLOW}Required packages: ${REQUIRED_PACKAGES}${NC}"
