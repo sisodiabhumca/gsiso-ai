@@ -1,38 +1,32 @@
-- [Home](home)
+# Gsiso AI Linux Wiki
 
 ## Getting Started
-- [Installation](getting-started/installation)
-- [Quick Start](getting-started/quick-start)
-- [System Requirements](getting-started/system-requirements)
+- [Home](home)
+- [Installation Guide](installation-guide)
+- [User Guide](user-guide)
+- [FAQ](faq)
 
-## User Guide
+## Development
+- [Developer Guide](developer-guide)
+- [Architecture Overview](architecture/system-overview)
 - [Package Management](user-guide/package-management)
 - [System Configuration](user-guide/system-configuration)
-- [Networking](user-guide/networking)
-- [Troubleshooting](user-guide/troubleshooting)
 
-## Developer Guide
-- [Building from Source](developer-guide/building)
-- [Creating Packages](developer-guide/creating-packages)
-- [Contribution Guidelines](developer-guide/contribution-guidelines)
-- [Development Workflow](developer-guide/development-workflow)
+## Documentation
+- [Getting Started](getting-started/installation)
+- [User Guide](user-guide)
+- [Developer Guide](developer-guide)
+- [FAQ](faq)
 
-## Architecture
-- [System Overview](architecture/system-overview)
-- [Boot Process](architecture/boot-process)
-- [Package Management](architecture/package-management)
-- [Security Model](architecture/security-model)
+## Project Information
+- [GitHub Repository](https://github.com/sisodiabhumca/gsiso-ai)
+- [Issues](https://github.com/sisodiabhumca/gsiso-ai/issues)
+- [Discussions](https://github.com/sisodiabhumca/gsiso-ai/discussions)
+- [Releases](https://github.com/sisodiabhumca/gsiso-ai/releases)
 
-## API Reference
-- [System APIs](api-reference/system-apis)
-- [Package Manager API](api-reference/package-manager-api)
-- [Configuration Reference](api-reference/configuration-reference)
-
-## Community
-- [Contributing](community/contributing)
-- [Code of Conduct](community/code-of-conduct)
-- [Governance](community/governance)
-
-## FAQ
-- [General Questions](faq/general)
-- [Troubleshooting](faq/troubleshooting)
+## Quick Links
+- [Download ISO](https://github.com/sisodiabhumca/gsiso-ai/actions)
+- [Installation Guide](installation-guide)
+- [User Guide](user-guide)
+- [Developer Guide](developer-guide)
+- [FAQ](faq)
