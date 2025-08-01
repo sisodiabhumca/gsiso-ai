@@ -1,58 +1,79 @@
-# Gsiso AI - Lightweight Linux Distribution
+# gsiso ai website
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-Gsiso AI is a lightweight, user-friendly Linux distribution designed for efficiency and ease of use. Built with minimalism in mind, it's perfect for older hardware, embedded systems, or anyone who values speed and simplicity.
+this is the official website for gsiso ai linux distribution. it's built with plain html and css for maximum compatibility and performance.
 
 ## Features
 
-- **Lightweight**: Optimized for performance on low-resource systems
-- **Easy to Use**: Intuitive interface and simple configuration
-- **Modular**: Add or remove components as needed
-- **Secure**: Regular updates and security patches
-- **Open Source**: Fully transparent and community-driven
+- **Responsive Design**: Works on all devices
+- **Fast Loading**: No JavaScript required
+- **Modern UI**: Clean and professional look
+- **Accessibility**: Built with accessibility in mind
 
-## System Requirements
+## Getting Started
 
-- CPU: x86_64 or ARMv7+ (32-bit and 64-bit support)
-- RAM: 512MB minimum (1GB recommended)
-- Storage: 5GB disk space minimum
-- Graphics: Any VGA-compatible card
-- Boot: USB or CD/DVD drive for installation
+### Prerequisites
 
-## Quick Start
-
-### Building from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/gsiso-ai.git
-cd gsiso-ai
-
-# Build the ISO
-./build.sh
-```
+- A web server (Apache, Nginx, etc.)
+- Git (for deployment)
 
 ### Installation
 
-1. Download the latest ISO from our [releases page](https://github.com/yourusername/gsiso-ai/releases)
-2. Create a bootable USB: `dd if=gsiso-ai.iso of=/dev/sdX bs=4M status=progress`
-3. Boot from the USB drive
-4. Follow the on-screen installation wizard
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/gsiso-ai.git
+   cd gsiso-ai/website
+   ```
 
-## Documentation
+2. Deploy to your web server:
+   - Copy all files to your web server's root directory
+   - Ensure the `.htaccess` file is configured correctly (if using Apache)
 
-For detailed documentation, please visit our [Wiki](https://github.com/yourusername/gsiso-ai/wiki).
+### Development
+
+1. Make your changes to the HTML and CSS files
+2. Test locally by opening `index.html` in a web browser
+3. Commit and push your changes
+
+## Deployment
+
+### Using GitHub Pages
+
+1. Go to your repository settings on GitHub
+2. Navigate to "Pages" in the left sidebar
+3. Select the `main` branch and `/docs` folder
+4. Click "Save"
+
+### Using Netlify
+
+1. Push your code to a GitHub repository
+2. Log in to [Netlify](https://www.netlify.com/)
+3. Click "New site from Git"
+4. Select your repository and branch
+5. Set the build command to `echo "No build step required"`
+6. Set the publish directory to `website`
+7. Click "Deploy site"
+
+## Directory Structure
+
+```
+website/
+├── index.html          # Homepage
+├── css/
+│   └── style.css       # Main stylesheet
+├── images/             # Image assets
+└── README.md           # This file
+```
 
 ## Contributing
 
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
+Please read [CONTRIBUTING.md](../CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](../LICENSE) file for details.
 
 ## Acknowledgments
 
-- Linux Kernel Team
-- All open-source contributors and maintainers
+- [Font Awesome](https://fontawesome.com/) for icons
+- [Google Fonts](https://fonts.google.com/) for typography
+- All contributors who have helped improve this project
