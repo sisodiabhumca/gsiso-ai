@@ -1,4 +1,4 @@
-# Gsiso AI Linux 🐧
+# gsiso AI Linux 🐧
 
 ![Gsiso AI Logo](gsiso%20ai.jpg)
 
