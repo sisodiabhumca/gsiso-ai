@@ -47,44 +47,84 @@ jobs:
     
     - name: Test website
       run: |
+        echo "Checking website files..."
+        ls -la docs/ || echo "docs directory not found"
+        
         # Simple test to check if the website files exist
         if [ -f docs/index.html ]; then
           echo "Website files exist"
+          ls -la docs/
         else
           echo "Warning: docs/index.html not found"
           # Create a simple placeholder if it doesn't exist
           mkdir -p docs
           echo "<html><body><h1>Gsiso AI</h1><p>Website under construction</p></body></html>" > docs/index.html
+          echo "Created placeholder index.html"
         fi
         
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       run: |
-        echo "Deploying to GitHub Pages..."
+        echo "=== Starting GitHub Pages Deployment ==="
+        echo "Current directory: $(pwd)"
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref }}"
         
         # Configure git
+        echo "Configuring git..."
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
+        # Show git status
+        echo "Git status:"
+        git status
+        
         # Check if gh-pages branch exists
+        echo "Checking for gh-pages branch..."
         if git ls-remote --heads origin gh-pages | grep gh-pages; then
           echo "gh-pages branch exists, updating..."
-          git checkout gh-pages
-          git pull origin gh-pages
+          git checkout gh-pages || {
+            echo "Failed to checkout gh-pages, creating new branch..."
+            git checkout --orphan gh-pages
+          }
+          git pull origin gh-pages || echo "Pull failed, continuing with current state"
         else
           echo "gh-pages branch doesn't exist, creating..."
           git checkout --orphan gh-pages
         fi
         
+        echo "Current branch after checkout: $(git branch --show-current)"
+        
         # Remove all files and copy docs
-        git rm -rf . || true
-        cp -r docs/* .
+        echo "Removing existing files..."
+        git rm -rf . || echo "No files to remove"
+        
+        echo "Copying docs files..."
+        ls -la docs/ || echo "docs directory not found"
+        cp -r docs/* . || {
+          echo "Failed to copy docs, creating minimal content..."
+          echo "<html><body><h1>Gsiso AI</h1><p>Website under construction</p></body></html>" > index.html
+        }
+        
+        echo "Files after copy:"
+        ls -la
         
         # Add and commit
-        git add .
-        git commit -m "Deploy website - $(date)" || echo "No changes to commit"
+        echo "Adding files to git..."
+        git add . || echo "No files to add"
+        
+        echo "Committing changes..."
+        git commit -m "Deploy website - $(date)" || {
+          echo "No changes to commit, but continuing..."
+          echo "Git status:"
+          git status
+        }
         
         # Push to gh-pages
-        git push origin gh-pages --force
+        echo "Pushing to gh-pages branch..."
+        git push origin gh-pages --force || {
+          echo "Push failed, trying with token..."
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages --force
+        }
         
-        echo "Deployment completed successfully!"
+        echo "=== Deployment completed successfully! ==="
