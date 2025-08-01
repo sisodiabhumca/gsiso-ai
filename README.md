@@ -1,6 +1,6 @@
 # gsiso AI Linux 🐧
 
-![Gsiso AI Logo](gsiso%20ai.jpg)
+<img src="gsiso%20ai.jpg" alt="Gsiso AI Logo" width="100" height="100">
 
 **A complete, modern Linux distribution with desktop environment, package management, and professional installation experience.**
 
