@@ -1,0 +1,32 @@
+#!/bin/sh
+
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+# Prefer devtmpfs if available
+if mount -t devtmpfs none /dev 2>/dev/null; then
+  :
+else
+  mknod -m 600 /dev/console c 5 1
+  mknod -m 666 /dev/null c 1 3
+fi
+
+mount -t tmpfs none /run
+
+# Minimal hostname
+echo "gsiso-min" > /etc/hostname
+hostname -F /etc/hostname
+
+# Seed /etc/resolv.conf if empty (useful for debugging)
+if [ ! -s /etc/resolv.conf ]; then
+  echo "nameserver 1.1.1.1" > /etc/resolv.conf
+fi
+
+# Start a getty on tty1
+/bin/sh -c "/sbin/getty -L tty1 115200 vt100" &
+
+# Show a short welcome message
+[ -f /etc/motd ] && cat /etc/motd
+
+# Drop to shell on console
+exec /bin/sh

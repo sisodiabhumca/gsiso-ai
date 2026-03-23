@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+echo "Gsiso Minimal Installer"
+echo "This live environment only includes BusyBox."
+echo "To install, run install-to-disk.sh from the build host:"
+echo "  from-scratch/scripts/install-to-disk.sh /dev/sdX"
+echo ""
+echo "If you have grub-install available in this environment, you can copy that script here and run it."

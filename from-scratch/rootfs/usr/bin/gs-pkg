@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+PKG_DIR="${PKG_DIR:-/packages}"
+DB_FILE="/etc/gs-pkg/installed.db"
+
+mkdir -p /etc/gs-pkg
+
+usage() {
+  echo "gs-pkg list"
+  echo "gs-pkg install <name>"
+  exit 1
+}
+
+cmd="${1:-}"
+case "$cmd" in
+  list)
+    ls -1 "$PKG_DIR" 2>/dev/null || true
+    ;;
+  install)
+    name="${2:-}"
+    [ -n "$name" ] || usage
+
+    pkg="$PKG_DIR/$name.tar.gz"
+    if [ ! -f "$pkg" ]; then
+      echo "Package not found: $name" >&2
+      exit 1
+    fi
+
+    if grep -qx "$name" "$DB_FILE" 2>/dev/null; then
+      echo "Already installed: $name"
+      exit 0
+    fi
+
+    tar -xzf "$pkg" -C /
+    echo "$name" >> "$DB_FILE"
+    echo "Installed: $name"
+    ;;
+  *)
+    usage
+    ;;
+esac

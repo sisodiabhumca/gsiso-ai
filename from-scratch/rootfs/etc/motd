@@ -1,0 +1,5 @@
+Welcome to Gsiso Minimal Linux
+
+- Run `gs-pkg list` to see package layers
+- Run `gs-pkg install hello` to install the example package
+- Run `gs-install` for install guidance
